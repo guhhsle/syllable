@@ -12,9 +12,6 @@ List<String> syllables = ['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U', ''];
 
 List<int> d = [0, 0, 0, 0];
 
-//			 0      1     2      3
-//		nope * high * SAD * high * nope
-
 Future nextSyllable() async {
   d = dots.value.toList();
   clearing = true;
@@ -109,7 +106,7 @@ Future clearThreshold(bool auto) async {
     }
     if (pf['animations']) {
       dots.value = d.toList();
-      await Future.delayed(const Duration(milliseconds: 10));
+      await Future.delayed(const Duration(milliseconds: 8));
     }
   }
   position = pf['book'].indexOf(text.substring(0, d[3]));
