@@ -86,6 +86,8 @@ Future animateOffset(int j, int inc) async {
   }
 }
 
+final List lineBreaks = [' ', '\n', '—', '-'];
+
 Future clearThreshold(bool auto) async {
   clearing = true;
   RenderBox ts = textKey.currentContext?.findRenderObject() as RenderBox;
@@ -95,11 +97,10 @@ Future clearThreshold(bool auto) async {
 
   while (d[0] > row) {
     int i = 0;
-    while (i < row) {
-      if (text[i] == '\n') break;
+    while (i < row - 1 && text[i] != '\n') {
       i++;
     }
-    while (i > 0 && text[i] != ' ' && text[i] != '\n') {
+    while (i > 0 && !lineBreaks.contains(text[i])) {
       i--;
     }
     i++;
@@ -109,34 +110,11 @@ Future clearThreshold(bool auto) async {
     }
     if (pf['animations']) {
       dots.value = d.toList();
-      await Future.delayed(const Duration(milliseconds: 8));
+      await Future.delayed(const Duration(milliseconds: 1000));
     }
   }
   position = pf['book'].indexOf(text.substring(0, d[3]));
   dots.value = d.toList();
-
-  /*int threshold = auto ? 0 : pf['clearThreshold'] ~/ 4;
-  if (pf['animations']) {
-    int step = (threshold / 50).ceil() + 1;
-    while (d[0] > threshold) {
-      text = text.replaceRange(0, step, '');
-      for (int i = 0; i < d.length; i++) {
-        d[i] -= step;
-      }
-      dots.value = d.toList();
-      await Future.delayed(const Duration(microseconds: 900));
-    }
-  } else {
-  */
-  /*
-  int threshold = auto ? d[0] : pf['clearThreshold'];
-  text = text.replaceRange(0, threshold, '');
-  for (int i = 0; i < d.length; i++) {
-    d[i] -= threshold;
-  }
-
-  position = pf['book'].indexOf(text);
-  */
   clearing = false;
 }
 

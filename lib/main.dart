@@ -75,6 +75,7 @@ class _HomeState extends State<Home> {
       builder: (context, snap, child) {
         double distance = 0;
         int pos = position + snap[1];
+        bool addZero = pos / bookLen < 0.1;
         String percent = '${(pos * 100 / bookLen).toStringAsFixed(2)} %';
         return Scaffold(
           appBar: AppBar(
@@ -85,7 +86,7 @@ class _HomeState extends State<Home> {
                 jumpTo(to);
               },
               child: Text(
-                ' $percent ',
+                ' ${addZero ? '0' : ''}$percent ',
                 key: textKey,
                 style: TextStyle(
                   fontSize: pf['fontSize'].toDouble(),
