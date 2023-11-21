@@ -10,12 +10,13 @@ dependencies:
   flutter:
     sdk: flutter
 
-
+  html: any
+  archive: any
   shared_preferences: ^2.2.0
   file_picker: ^6.0.0
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: any
   flutter_test:
     sdk: flutter
 

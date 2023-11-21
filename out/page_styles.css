@@ -1,0 +1,24 @@
+@page {
+  margin-bottom: 5pt;
+  margin-top: 5pt;
+}
+@font-face {
+  font-family: scala-sans-sc-offc-pro--;
+  src: url(scala-sans-sc-offc-pro--.ttf);
+}
+@font-face {
+  font-family: scala-sans-offc-pro-i-;
+  src: url(scala-sans-offc-pro-i-.ttf);
+}
+@font-face {
+  font-family: scala-sans-offc-pro-bi-;
+  src: url(scala-sans-offc-pro-bi-.ttf);
+}
+@font-face {
+  font-family: scala-sans-offc-pro--;
+  src: url(scala-sans-offc-pro--.ttf);
+}
+@font-face {
+  font-family: scala-sans-offc-pro-b-;
+  src: url(scala-sans-offc-pro-b-.ttf);
+}
