@@ -110,7 +110,7 @@ Future clearThreshold(bool auto) async {
     }
     if (pf['animations']) {
       dots.value = d.toList();
-      await Future.delayed(const Duration(milliseconds: 1000));
+      await Future.delayed(const Duration(milliseconds: 8));
     }
   }
   position = pf['book'].indexOf(text.substring(0, d[3]));
