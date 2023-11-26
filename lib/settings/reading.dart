@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:syllable/functions/reading.dart';
 
 import '../data.dart';
 import '../functions.dart';
+import '../functions/add_book.dart';
 
 Layer reading() => Layer(
       action: Setting(

@@ -1,12 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:archive/archive_io.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:syllable/functions.dart';
 
-import 'package:html/parser.dart';
 import '../data.dart';
 
 String text = '';
@@ -18,9 +12,8 @@ List<int> d = [0, 0, 0, 0];
 Future nextSyllable() async {
   d = dots.value.toList();
   clearing = true;
-  if (d[0] > pf['clearThreshold']) {
-    await clearThreshold(false);
-  }
+  if (d[0] > pf['clearThreshold']) await clearThreshold(false);
+
   if (text.length - d[3] < pf['preload']) {
     int currentEnd = position + text.length;
     int? nextEnd = currentEnd + pf['preload'] as int;
@@ -118,52 +111,6 @@ Future clearThreshold(bool auto) async {
   clearing = false;
 }
 
-Future<int> addBook() async {
-  String book = '';
-  late final PlatformFile result;
-
-  try {
-    result = (await FilePicker.platform.pickFiles())!.files.single;
-//EPUB
-    if (result.name.endsWith('.epub')) {
-      try {
-        final inputStream = InputFileStream(result.path!);
-        final archive = ZipDecoder().decodeBuffer(inputStream);
-        for (var file in archive.files) {
-          if (file.isFile) {
-            if (file.name.endsWith('.html')) {
-              final String parsedString = parse(
-                parse(file.content).body!.text,
-              ).documentElement!.text;
-              book += '$parsedString\n\n\n';
-            }
-          }
-        }
-      } catch (e) {
-        debugPrint('$e');
-      }
-    } else {
-//TEXT
-      try {
-//APP
-        book = utf8.decode(await File(result.path!).readAsBytes());
-      } catch (e) {
-//WEB
-        try {
-          book = utf8.decode(result.bytes!);
-        } catch (e) {
-          showSnack('$e', false);
-        }
-      }
-    }
-  } catch (e) {
-    showSnack('$e', false);
-  }
-  setPref('book', book);
-  jumpTo(0);
-  return 0;
-}
-
 void jumpTo(int i) {
   position = i;
   int end = i + pf['preload'] as int;
@@ -171,6 +118,5 @@ void jumpTo(int i) {
   if (end > bookLen) end = bookLen;
   text = pf['book'].substring(i, end);
   setPref('position', i);
-
   dots.value = [0, 0, 0, 0];
 }
