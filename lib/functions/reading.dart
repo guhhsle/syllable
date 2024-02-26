@@ -88,12 +88,12 @@ Future clearThreshold(bool auto) async {
   double devWidth = MediaQuery.of(navigatorKey.currentContext!).size.width;
   int row = devWidth ~/ charWidth;
 
-  while (d[0] > row) {
+  while (d[0]  > row * 2) {
     int i = 0;
     while (i < row - 1 && text[i] != '\n') {
       i++;
     }
-    while (i > 0 && !lineBreaks.contains(text[i])) {
+    while (i > 0 && !text[i].contains(RegExp(r'(\s+)|(?=[.,;!?]) -—'))) {
       i--;
     }
     i++;
@@ -103,7 +103,7 @@ Future clearThreshold(bool auto) async {
     }
     if (pf['animations']) {
       dots.value = d.toList();
-      await Future.delayed(const Duration(milliseconds: 8));
+      await Future.delayed(const Duration(milliseconds: 80));
     }
   }
   position = pf['book'].indexOf(text.substring(0, d[3]));
