@@ -79,8 +79,6 @@ Future animateOffset(int j, int inc) async {
   }
 }
 
-final List lineBreaks = [' ', '\n', '—', '-'];
-
 Future clearThreshold(bool auto) async {
   clearing = true;
   RenderBox ts = textKey.currentContext?.findRenderObject() as RenderBox;
