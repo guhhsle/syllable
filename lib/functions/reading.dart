@@ -79,8 +79,6 @@ Future animateOffset(int j, int inc) async {
   }
 }
 
-
-
 Future clearThreshold(bool auto) async {
   clearing = true;
   RenderBox ts = textKey.currentContext?.findRenderObject() as RenderBox;
@@ -88,7 +86,7 @@ Future clearThreshold(bool auto) async {
   double devWidth = MediaQuery.of(navigatorKey.currentContext!).size.width;
   int row = devWidth ~/ charWidth;
 
-  while (d[0]  > row * 2) {
+  while (d[0] > row * 2) {
     int i = 0;
     while (i < row - 1 && text[i] != '\n') {
       i++;
@@ -103,7 +101,7 @@ Future clearThreshold(bool auto) async {
     }
     if (pf['animations']) {
       dots.value = d.toList();
-      await Future.delayed(const Duration(milliseconds: 80));
+      await Future.delayed(const Duration(milliseconds: 20));
     }
   }
   position = pf['book'].indexOf(text.substring(0, d[3]));
