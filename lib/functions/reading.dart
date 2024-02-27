@@ -79,6 +79,8 @@ Future animateOffset(int j, int inc) async {
   }
 }
 
+
+
 Future clearThreshold(bool auto) async {
   clearing = true;
   RenderBox ts = textKey.currentContext?.findRenderObject() as RenderBox;

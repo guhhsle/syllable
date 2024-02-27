@@ -5,22 +5,16 @@ import '../functions.dart';
 
 Layer interface() => Layer(
       action: Setting(
-        'Interface',
+        'Top',
         Icons.gradient_rounded,
-        '',
-        (c) {},
+        'pf//appbar',
+        (c) => nextPref(
+          'appbar',
+          ['Primary', 'Black', 'Transparent'],
+          refresh: true,
+        ),
       ),
       list: [
-        Setting(
-          'Top',
-          Icons.gradient_rounded,
-          'pf//appbar',
-          (c) => nextPref(
-            'appbar',
-            ['Primary', 'Black', 'Transparent'],
-            refresh: true,
-          ),
-        ),
         Setting(
           'Animations',
           Icons.animation_rounded,

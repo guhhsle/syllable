@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../data.dart';
 import '../functions.dart';
 import 'custom_card.dart';
-import 'data.dart';
 
 class SheetScrollModel extends StatefulWidget {
   final Layer Function(dynamic) func;
@@ -43,9 +43,7 @@ class SheetScrollModelState extends State<SheetScrollModel> {
                       Row(
                         children: layer.leading +
                             [
-                              Expanded(
-                                child: CustomCard(layer.action),
-                              ),
+                              Expanded(child: CustomCard(layer.action)),
                             ] +
                             layer.trailing,
                       ),
@@ -67,12 +65,13 @@ class SheetScrollModelState extends State<SheetScrollModel> {
                                     : null,
                                 title: Text(t(list[i].title)),
                                 trailing: list[i].secondary != null
-                                    ? IconButton(
-                                        icon: Icon(
+                                    ? InkWell(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Icon(
                                           list[i].icon,
                                           color: list[i].iconColor,
                                         ),
-                                        onPressed: () {
+                                        onTap: () {
                                           list[i].secondary!(context);
                                           setState(() {});
                                         },

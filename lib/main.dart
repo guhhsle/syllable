@@ -90,6 +90,7 @@ class _HomeState extends State<Home> {
                 key: textKey,
                 style: TextStyle(
                   fontSize: pf['fontSize'].toDouble(),
+                  fontWeight: FontWeight.values[pf['fontBold'] ? 8 : 0],
                 ),
               ),
             ),
