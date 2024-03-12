@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data.dart';
 import '../functions.dart';
 import 'sheet_model.dart';
+import 'sheet_scroll.dart';
 
 class Setting {
   final String title, trailing;
@@ -74,6 +75,7 @@ class Layer {
 void showSheet({
   required Layer Function(dynamic) func,
   dynamic param,
+  bool scroll = false,
   BuildContext? hidePrev,
 }) {
   if (hidePrev != null) {
@@ -84,6 +86,9 @@ void showSheet({
     isScrollControlled: true,
     barrierColor: Colors.black.withOpacity(0.3),
     builder: (context) {
+      if (scroll) {
+        return SheetScrollModel(func: func, param: param);
+      }
       return SheetModel(func: func, param: param);
     },
   );

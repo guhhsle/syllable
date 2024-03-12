@@ -37,6 +37,7 @@ class PageSettingsState extends State<PageSettings> {
             onTap: () => showSheet(
               func: map.values.elementAt(index),
               param: index == 2,
+              scroll: index > 1,
             ),
           ),
         ),
