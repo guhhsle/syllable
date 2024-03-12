@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:syllable/settings/reading.dart';
 
 import '../body.dart';
-import 'data.dart';
-import 'functions.dart';
 import 'settings/interface.dart';
+import 'layer.dart';
 
 class PageSettings extends StatefulWidget {
   const PageSettings({Key? key}) : super(key: key);
@@ -14,11 +13,11 @@ class PageSettings extends StatefulWidget {
 }
 
 class PageSettingsState extends State<PageSettings> {
-  Map<String, Layer> map = {
-    'Interface': interface(),
-    'Reading': reading(),
-    'Primary': themeMap(true),
-    'Background': themeMap(false),
+  Map<String, Layer Function(dynamic)> map = {
+    'Interface': interface,
+    'Reading': reading,
+    'Primary': themeMap,
+    'Background': themeMap,
   };
 
   @override
@@ -33,12 +32,11 @@ class PageSettingsState extends State<PageSettings> {
           itemBuilder: (context, index) => ListTile(
             title: Text(map.keys.elementAt(index)),
             leading: Icon(
-              map.values.elementAt(index).action.icon,
+              map.values.elementAt(index)(true).action.icon,
             ),
             onTap: () => showSheet(
-              func: (i) => map.values.elementAt(index),
-              param: 0,
-              scroll: index > 1,
+              func: map.values.elementAt(index),
+              param: index == 2,
             ),
           ),
         ),

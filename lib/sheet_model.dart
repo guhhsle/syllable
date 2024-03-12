@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../functions.dart';
 import 'custom_card.dart';
-import 'data.dart';
+import 'functions.dart';
+import 'layer.dart';
 
 class SheetModel extends StatefulWidget {
   final Layer Function(dynamic) func;
@@ -26,62 +26,32 @@ class _SheetModelState extends State<SheetModel> {
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: ValueListenableBuilder(
-            valueListenable: refreshLay,
-            builder: (context, non, child) {
-              Layer layer = widget.func(widget.param);
-              List<Setting> list = layer.list;
-              return ListView(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  Row(
-                    children: layer.leading +
-                        [
-                          Expanded(child: CustomCard(layer.action)),
-                        ] +
-                        layer.trailing,
-                  ),
-                  ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: list.length,
-                    itemBuilder: (context, i) {
-                      return ListTile(
-                        leading: list[i].secondary == null
-                            ? Icon(
-                                list[i].icon,
-                                color: list[i].iconColor,
-                              )
-                            : null,
-                        title: Text(t(list[i].title)),
-                        trailing: list[i].secondary != null
-                            ? IconButton(
-                                icon: Icon(
-                                  list[i].icon,
-                                  color: list[i].iconColor,
-                                ),
-                                onPressed: () {
-                                  list[i].secondary!(context);
-                                  setState(() {});
-                                },
-                              )
-                            : Text(t(list[i].trailing)),
-                        onTap: () {
-                          list[i].onTap(context);
-                          setState(() {});
-                        },
-                        onLongPress: list[i].onHold == null
-                            ? null
-                            : () {
-                                list[i].onHold!(context);
-                                setState(() {});
-                              },
-                      );
-                    },
-                  ),
-                ],
-              );
-            }),
+          valueListenable: refreshLay,
+          builder: (context, non, child) {
+            Layer layer = widget.func(widget.param);
+            List<Setting> list = layer.list;
+            return ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                Row(
+                  children: <Widget>[
+                        Expanded(
+                          child: CustomCard(layer.action),
+                        ),
+                      ] +
+                      (layer.trailing == null ? [] : layer.trailing!(context)),
+                ),
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: list.length,
+                  itemBuilder: (context, i) => list[i].toTile(context),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

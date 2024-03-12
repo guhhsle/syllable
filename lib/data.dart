@@ -54,7 +54,6 @@ Map l = {
   'true': 'Ye',
   'false': 'Nye',
 };
-ValueNotifier<List<Layer>> layers = ValueNotifier([]);
 final navigatorKey = GlobalKey<NavigatorState>();
 const ScrollPhysics scrollPhysics = BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
 late final SharedPreferences prefs;
@@ -76,39 +75,6 @@ final Map<String, IconData> iconsTheme = {
   'Anchor': Icons.anchor_outlined,
   'Black': Icons.nights_stay_outlined,
 };
-
-class Setting {
-  final String title, trailing;
-  final IconData icon;
-  final Color? iconColor;
-  final void Function(BuildContext) onTap;
-  final void Function(BuildContext)? secondary;
-  final void Function(BuildContext)? onHold;
-
-  const Setting(
-    this.title,
-    this.icon,
-    this.trailing,
-    this.onTap, {
-    this.secondary,
-    this.onHold,
-    this.iconColor,
-  });
-}
-
-class Layer {
-  Setting action;
-  List<Setting> list;
-  List<Widget> leading, trailing;
-
-  Layer({
-    required this.action,
-    required this.list,
-    this.leading = const [SizedBox()],
-    this.trailing = const [SizedBox()],
-  });
-}
-
 void goToPage(Widget page) {
   if (navigatorKey.currentContext == null) return;
   Navigator.of(navigatorKey.currentContext!).push(

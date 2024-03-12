@@ -5,8 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data.dart';
-import 'sheet_model.dart';
-import 'sheet_scroll.dart';
+import 'layer.dart';
 import 'theme.dart';
 
 Future<String> getInput(String? init, {String? hintText}) async {
@@ -45,34 +44,6 @@ Future<String> getInput(String? init, {String? hintText}) async {
     },
   );
   return completer.future;
-}
-
-Layer themeMap(bool p) {
-  Layer layer = Layer(
-      action: Setting(
-        p ? 'pf//primary' : 'pf//background',
-        p ? Icons.colorize_rounded : Icons.tonality_rounded,
-        '',
-        (c) => fetchColor(p),
-      ),
-      list: []);
-  for (int i = 0; i < colors.length; i++) {
-    String name = colors.keys.toList()[i];
-    layer.list.add(
-      Setting(
-        name,
-        iconsTheme[name]!,
-        '',
-        (c) => setPref(
-          p ? 'primary' : 'background',
-          name,
-          refresh: true,
-        ),
-        iconColor: colors.values.elementAt(i),
-      ),
-    );
-  }
-  return layer;
 }
 
 void fetchColor(bool p) {
@@ -119,9 +90,6 @@ final ValueNotifier<bool> refreshLay = ValueNotifier(true);
 
 String t(dynamic d) {
   String s = '$d';
-  if (s.startsWith('pf//')) {
-    return t(pf[s.replaceAll('pf//', '')]);
-  }
   return l[s] ?? s;
 }
 
@@ -143,6 +111,7 @@ void setPref(
     prefs.setDouble(pString, value);
   }
   if (refresh) refreshAll();
+  refreshLayer();
 }
 
 void showSnack(String text, bool good) {
@@ -209,26 +178,4 @@ Future<void> initPrefs() async {
       }
     }
   }
-}
-
-void showSheet({
-  required Layer Function(dynamic) func,
-  required dynamic param,
-  bool scroll = false,
-  BuildContext? hidePrev,
-}) {
-  if (hidePrev != null) {
-    Navigator.of(hidePrev).pop();
-  }
-  showModalBottomSheet(
-    context: navigatorKey.currentContext!,
-    isScrollControlled: true,
-    barrierColor: Colors.black.withOpacity(0.3),
-    builder: (context) {
-      if (scroll) {
-        return SheetScrollModel(func: func, param: param);
-      }
-      return SheetModel(func: func, param: param);
-    },
-  );
 }
