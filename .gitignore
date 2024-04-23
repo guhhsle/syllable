@@ -46,4 +46,4 @@ app.*.map.json
 # Custom
 /out/
 /node_modules/
-.firebase/
+/.firebase/
