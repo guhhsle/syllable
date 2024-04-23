@@ -80,7 +80,7 @@ class _HomeState extends State<Home> {
                 }
               },
               child: Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
                 width: double.infinity,
                 height: double.infinity,
                 child: Center(
