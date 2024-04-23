@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 
 import '../functions.dart';
+import 'prefs.dart';
 import 'reading.dart';
 
 Future<int> addBook() async {

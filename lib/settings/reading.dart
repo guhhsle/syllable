@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-
 import '../data.dart';
 import '../functions.dart';
 import '../functions/add_book.dart';
+import '../functions/prefs.dart';
 import '../layer.dart';
 
 Layer reading(dynamic d) {
-  String init = '';
+  String initBreakpoints = '';
   for (String point in pf['breakpoints']) {
-    init = init + point;
+    initBreakpoints = initBreakpoints + point;
+  }
+  String initSyllables = '';
+  for (String point in pf['syllables']) {
+    initSyllables = initSyllables + point;
   }
   return Layer(
     action: Setting(
@@ -88,14 +92,27 @@ Layer reading(dynamic d) {
       Setting(
         'Breakpoints',
         Icons.crop_16_9_rounded,
-        init,
+        initBreakpoints,
         (c) async {
-          String input = await getInput(init);
+          String input = await getInput(initBreakpoints);
           List<String> next = [];
           for (int i = 0; i < input.length; i++) {
             next.add(input[i]);
           }
           setPref('breakpoints', next);
+        },
+      ),
+      Setting(
+        'Syllables',
+        Icons.crop_16_9_rounded,
+        initSyllables,
+        (c) async {
+          String input = await getInput(initSyllables);
+          List<String> next = [];
+          for (int i = 0; i < input.length; i++) {
+            next.add(input[i]);
+          }
+          setPref('syllables', next);
         },
       ),
     ],

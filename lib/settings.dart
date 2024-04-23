@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:syllable/settings/reading.dart';
-
 import '../body.dart';
 import 'settings/interface.dart';
 import 'layer.dart';

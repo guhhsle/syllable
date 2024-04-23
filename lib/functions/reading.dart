@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:syllable/functions.dart';
-
 import '../data.dart';
+import 'prefs.dart';
 
 String text = '';
 ValueNotifier<List<int>> dots = ValueNotifier([0, 0, 0, 0]);
-List<String> syllables = ['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U', ''];
 
 List<int> d = [0, 0, 0, 0];
 
@@ -31,14 +29,14 @@ Future<void> moveCursor() async {
   d[2] += 2;
   String shift = pf['cursorShift'];
   if (shift.contains('Syllable')) {
-    while (!syllables.contains(text[d[2]])) {
+    while (!pf['syllables'].contains(text[d[2]])) {
       if (d[2] >= d[3]) await expandBehind();
       d[2]++;
     }
   }
   if (shift == '2 Syllables') {
     d[2] += 2;
-    while (!syllables.contains(text[d[2]])) {
+    while (!pf['syllables'].contains(text[d[2]])) {
       if (d[2] >= d[3]) await expandBehind();
       d[2]++;
     }

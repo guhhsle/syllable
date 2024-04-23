@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Map pf = {
   'background': 'Ivory',
-  'primary': 'Ultramarine',
+  'primary': 'Gruv Dark',
   'appbar': 'Primary',
   //READING
   'clearThreshold': 600,
@@ -13,6 +13,7 @@ Map pf = {
   'fontSize': 16,
   'fontBold': true,
   'breakpoints': defaultBreakpoints.toList(),
+  'syllables': defaultSyllables.toList(),
   //CURSOR
   'intensity': 20,
   'exponential': false,
@@ -26,6 +27,7 @@ Map pf = {
 final GlobalKey textKey = GlobalKey();
 int bookLen = 0;
 const List<String> defaultBreakpoints = ['(', ')', '-', '.', ',', '!', '?', ':', ';'];
+const List<String> defaultSyllables = ['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U', ''];
 
 final Map<String, Color> colors = {
   'White': Colors.white,

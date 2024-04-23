@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:syllable/body.dart';
 import 'package:syllable/functions.dart';
 import 'package:syllable/theme.dart';
-
 import 'data.dart';
+import 'functions/prefs.dart';
 import 'functions/reading.dart';
 import 'settings.dart';
 
