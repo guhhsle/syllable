@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
-
 import 'data.dart';
-import 'functions.dart';
+
+Color color(bool primary) {
+  if (primary) {
+    return colors[pf['primary']] ?? Color(int.tryParse('0xFF${pf['primary']}') ?? 0xFF170a1c);
+  } else {
+    return colors[pf['background']] ?? Color(int.tryParse('0xFF${pf['background']}') ?? 0xFFf6f7eb);
+  }
+}
+
+Color lighterColor(Color p, Color q) {
+  if (p.computeLuminance() > q.computeLuminance()) return p;
+  return q;
+}
 
 ThemeData theme(Color p, Color b) {
   return ThemeData(

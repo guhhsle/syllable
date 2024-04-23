@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
+import '../functions/other.dart';
+import '../layer.dart';
 import 'custom_card.dart';
-import 'functions.dart';
-import 'layer.dart';
 
 class SheetModel extends StatefulWidget {
   final Layer Function(dynamic) func;

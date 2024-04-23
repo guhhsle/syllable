@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:syllable/settings/reading.dart';
-import '../body.dart';
-import 'settings/interface.dart';
-import 'layer.dart';
+import 'package:syllable/settings/cursor.dart';
+import '../layer.dart';
+import '../widgets/body.dart';
+import 'book.dart';
+import 'interface.dart';
 
 class PageSettings extends StatefulWidget {
   const PageSettings({Key? key}) : super(key: key);
@@ -14,7 +15,8 @@ class PageSettings extends StatefulWidget {
 class PageSettingsState extends State<PageSettings> {
   Map<String, Layer Function(dynamic)> map = {
     'Interface': interface,
-    'Reading': reading,
+    'Cursor': cursor,
+    'Book': book,
     'Primary': themeMap,
     'Background': themeMap,
   };
@@ -36,7 +38,7 @@ class PageSettingsState extends State<PageSettings> {
             onTap: () => showSheet(
               func: map.values.elementAt(index),
               param: index == 2,
-              scroll: index > 1,
+              scroll: index > 2,
             ),
           ),
         ),

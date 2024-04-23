@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'data.dart';
-import 'functions/prefs.dart';
-import 'theme.dart';
+import '../data.dart';
+import '../theme.dart';
+import 'prefs.dart';
 
 Future<String> getInput(String? init, {String? hintText}) async {
   if (navigatorKey.currentContext == null) return '';
@@ -81,17 +81,4 @@ void showSnack(String text, bool good) {
       ),
     ),
   );
-}
-
-Color color(bool primary) {
-  if (primary) {
-    return colors[pf['primary']] ?? Color(int.tryParse('0xFF${pf['primary']}') ?? 0xFF170a1c);
-  } else {
-    return colors[pf['background']] ?? Color(int.tryParse('0xFF${pf['background']}') ?? 0xFFf6f7eb);
-  }
-}
-
-Color lighterColor(Color p, Color q) {
-  if (p.computeLuminance() > q.computeLuminance()) return p;
-  return q;
 }

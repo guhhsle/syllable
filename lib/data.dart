@@ -20,7 +20,7 @@ Map pf = {
   'cursorShift': 'Syllable',
   'fontAlign': 'Start',
   //
-  'book': '>Settings >Reading',
+  'book': '>Settings >Book >Open',
   'position': 0,
 };
 

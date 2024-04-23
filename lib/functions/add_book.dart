@@ -1,12 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
-
-import '../functions.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'other.dart';
 import 'prefs.dart';
 import 'reading.dart';
 

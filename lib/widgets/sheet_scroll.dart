@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
+import '../functions/other.dart';
 import '../layer.dart';
 import 'custom_card.dart';
-import 'functions.dart';
 
 class SheetScrollModel extends StatefulWidget {
   final Layer Function(dynamic) func;

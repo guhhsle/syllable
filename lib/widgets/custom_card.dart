@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../functions.dart';
-import 'layer.dart';
+import '../functions/other.dart';
+import '../layer.dart';
 
 class CustomCard extends StatelessWidget {
   final Setting setting;

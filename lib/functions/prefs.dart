@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data.dart';
-import '../functions.dart';
 import '../layer.dart';
+import 'other.dart';
 
 Future<void> initPrefs() async {
   prefs = await SharedPreferences.getInstance();

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'functions/other.dart';
+import 'widgets/sheet_model.dart';
+import 'widgets/sheet_scroll.dart';
 import '../data.dart';
-import '../functions.dart';
-import 'sheet_model.dart';
-import 'sheet_scroll.dart';
 
 class Setting {
   final String title, trailing;

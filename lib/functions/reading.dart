@@ -81,12 +81,12 @@ Future clearThreshold(bool auto) async {
   clearing = true;
   RenderBox ts = textKey.currentContext?.findRenderObject() as RenderBox;
   double charWidth = ts.size.width / 9;
-  double devWidth = MediaQuery.of(navigatorKey.currentContext!).size.width;
+  double devWidth = MediaQuery.of(navigatorKey.currentContext!).size.width - 16; //16 Padding
   int row = devWidth ~/ charWidth;
 
   while (d[0] > row * 2) {
     int i = 0;
-    while (i < row - 1 && text[i] != '\n') {
+    while (i < row && text[i] != '\n') {
       i++;
     }
     while (i > 0 && !text[i].contains(RegExp(r'(\s+)|(?=[.,;!?]) -—'))) {
