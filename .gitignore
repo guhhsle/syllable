@@ -47,3 +47,5 @@ app.*.map.json
 /out/
 /node_modules/
 /.firebase/
+.firebasesrc
+firebase.json
