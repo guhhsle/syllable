@@ -2,6 +2,8 @@ import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
+//import 'package:syncfusion_flutter_pdf/pdf.dart';
+//import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'other.dart';
@@ -14,8 +16,26 @@ Future<int> addBook() async {
 
   try {
     result = (await FilePicker.platform.pickFiles())!.files.single;
+
+    if (result.name.endsWith('.pdf')) {
+      showSnack('Convert PDF to text', true);
+      /*
+      File file = File.fromUri(Uri.file(result.path!));
+      final ByteData byteData = ByteData.view(await file.readAsBytesSync().buffer);
+
+      List<int> data = await byteData.buffer.asUint8List(
+        byteData.offsetInBytes,
+        byteData.lengthInBytes,
+      );
+
+      PdfDocument document = PdfDocument(inputBytes: data);
+      book = PdfTextExtractor(document).extractText();
+
+      showSnack('Done', true);
+
+		*/
+    } else if (result.name.endsWith('.epub')) {
 //EPUB
-    if (result.name.endsWith('.epub')) {
       try {
         final inputStream = InputFileStream(result.path!);
         final archive = ZipDecoder().decodeBuffer(inputStream);
