@@ -4,7 +4,7 @@ import '../template/functions.dart';
 import '../widgets/frame.dart';
 
 class PageSettings extends StatelessWidget {
-  const PageSettings({Key? key}) : super(key: key);
+  const PageSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
