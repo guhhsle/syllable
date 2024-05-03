@@ -5,7 +5,7 @@ import '../template/functions.dart';
 import '../template/layer.dart';
 import '../template/prefs.dart';
 
-Future<Layer> book(dynamic d) async {
+Future<Layer> bookSet(dynamic d) async {
   String initBreakpoints = '';
   for (String point in pf['breakpoints']) {
     initBreakpoints = initBreakpoints + point;

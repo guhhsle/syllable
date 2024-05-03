@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:syllable/settings/book.dart';
+import 'package:syllable/settings/cursor.dart';
+
+import 'settings/interface.dart';
+import 'template/layer.dart';
+import 'template/theme.dart';
 
 Map pf = {
   'background': 'Ivory',
@@ -22,6 +28,13 @@ Map pf = {
   'book': '>Settings >Book >Open',
   'position': 0,
 };
+final List<Setting> settings = [
+  Setting('Interface', Icons.toggle_on, '', (c) => showSheet(func: interfaceSet)),
+  Setting('Cursor', Icons.toggle_on, '', (c) => showSheet(func: cursorSet)),
+  Setting('Book', Icons.book_rounded, '', (c) => showSheet(func: bookSet)),
+  Setting('Primary', Icons.colorize_rounded, '', (c) => showSheet(func: themeMap, param: true, scroll: true)),
+  Setting('Background', Icons.colorize_rounded, '', (c) => showSheet(func: themeMap, param: false, scroll: true)),
+];
 
 final GlobalKey textKey = GlobalKey();
 int bookLen = 0;

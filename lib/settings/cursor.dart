@@ -5,7 +5,7 @@ import '../template/functions.dart';
 import '../template/layer.dart';
 import '../template/prefs.dart';
 
-Future<Layer> cursor(dynamic non) async {
+Future<Layer> cursorSet(dynamic non) async {
   String initSyllables = '';
   for (String point in pf['syllables']) {
     initSyllables = initSyllables + point;
