@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:syllable/settings/book.dart';
-import 'package:syllable/settings/cursor.dart';
-
 import 'settings/interface.dart';
 import 'template/layer.dart';
 import 'template/theme.dart';
+import '../settings/book.dart';
+import '../settings/cursor.dart';
 
 Map pf = {
   'background': 'Ivory',
