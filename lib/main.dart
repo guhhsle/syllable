@@ -1,10 +1,11 @@
+import 'package:flashy_flushbar/flashy_flushbar_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:syllable/theme.dart';
 import 'data.dart';
-import 'functions/other.dart';
-import 'functions/prefs.dart';
 import 'functions/reading.dart';
+import 'template/data.dart';
+import 'template/prefs.dart';
+import 'template/theme.dart';
 import 'widgets/home.dart';
 
 Future<void> main() async {
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Syllable',
           theme: theme(color(true), color(false)),
+          builder: FlashyFlushbarProvider.init(),
           home: AnnotatedRegion<SystemUiOverlayStyle>(
             value: const SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,

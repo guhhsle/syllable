@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../data.dart';
-import '../functions/other.dart';
 import '../functions/reading.dart';
 import '../settings/settings.dart';
+import '../template/functions.dart';
 import 'body.dart';
 
 class Home extends StatefulWidget {

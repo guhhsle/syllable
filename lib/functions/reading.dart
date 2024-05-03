@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data.dart';
-import 'prefs.dart';
+import '../template/data.dart';
+import '../template/prefs.dart';
 
 String text = '';
 ValueNotifier<List<int>> dots = ValueNotifier([0, 0, 0, 0]);

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../functions/add_book.dart';
-import '../functions/other.dart';
-import '../functions/prefs.dart';
-import '../layer.dart';
 import '../data.dart';
+import '../template/functions.dart';
+import '../template/layer.dart';
+import '../template/prefs.dart';
 
-Layer book(dynamic d) {
+Future<Layer> book(dynamic d) async {
   String initBreakpoints = '';
   for (String point in pf['breakpoints']) {
     initBreakpoints = initBreakpoints + point;

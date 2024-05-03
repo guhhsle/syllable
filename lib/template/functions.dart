@@ -1,9 +1,41 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:flashy_flushbar/flashy_flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:async';
+
 import '../data.dart';
-import '../theme.dart';
-import 'prefs.dart';
+import '../template/data.dart';
+import 'theme.dart';
+
+void goToPage(Widget page) {
+  if (navigatorKey.currentContext == null) return;
+  Navigator.of(navigatorKey.currentContext!).push(
+    MaterialPageRoute(builder: (c) => page),
+  );
+}
+
+void showSnack(String text, bool good, {Function()? onTap}) {
+  FlashyFlushbar(
+    leadingWidget: Icon(
+      good ? Icons.check_rounded : Icons.error_outline,
+      color: Colors.black,
+      size: 24,
+    ),
+    margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
+    backgroundColor: good ? Colors.green.shade100 : Colors.red.shade100,
+    animationDuration: const Duration(milliseconds: 64),
+    message: text,
+    duration: const Duration(seconds: 3),
+    isDismissible: true,
+    onTap: onTap ?? () {},
+    messageStyle: TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+      fontFamily: pf['font'],
+    ),
+  ).show();
+}
 
 Future<String> getInput(String? init, {String? hintText}) async {
   if (navigatorKey.currentContext == null) return '';
@@ -43,42 +75,22 @@ Future<String> getInput(String? init, {String? hintText}) async {
   return completer.future;
 }
 
-void fetchColor(bool p) {
-  Clipboard.getData(Clipboard.kTextPlain).then((value) {
-    if (value == null || value.text == null || int.tryParse('0xFF${value.text!.replaceAll('#', '')}') == null) {
-      showSnack('Clipboard HEX', false);
-    } else {
-      setPref(
-        p ? 'primary' : 'background',
-        value.text,
-        refresh: true,
-      );
-    }
-  });
-}
-
-final ValueNotifier<ThemeData> themeNotifier = ValueNotifier(ThemeData());
-void refreshAll() {
+void refreshInterface() {
   themeNotifier.value = theme(color(true), color(false));
 }
 
-final ValueNotifier<bool> refreshLay = ValueNotifier(true);
+Future<int> loadLocale() async {
+  final String response = await rootBundle.loadString(
+    'assets/translations/${pf['locale']}.json',
+  );
+  l = await jsonDecode(response);
+  return 0;
+}
 
 String t(dynamic d) {
   String s = '$d';
+  if (s.startsWith('pf//')) {
+    return t(pf[s.replaceAll('pf//', '')]);
+  }
   return l[s] ?? s;
-}
-
-void showSnack(String text, bool good) {
-  ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-    SnackBar(
-      backgroundColor: good ? Colors.green.shade200 : Colors.red.shade200,
-      content: Center(
-        child: Text(
-          text,
-          style: const TextStyle(color: Colors.black),
-        ),
-      ),
-    ),
-  );
 }

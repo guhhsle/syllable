@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'functions/other.dart';
-import 'widgets/sheet_model.dart';
-import 'widgets/sheet_scroll.dart';
-import '../data.dart';
+import 'data.dart';
+import 'functions.dart';
+import 'sheet_model.dart';
+import 'sheet_scroll.dart';
 
 class Setting {
-  final String title, trailing;
+  String title, trailing;
   IconData icon;
-  final Color? iconColor;
+  Color? iconColor;
   void Function(BuildContext) onTap;
-  final void Function(BuildContext)? secondary;
+  void Function(BuildContext)? secondary;
   void Function(BuildContext)? onHold;
 
   Setting(
@@ -21,6 +21,7 @@ class Setting {
     this.onHold,
     this.iconColor,
   });
+
   ListTile toTile(BuildContext context) {
     Widget? lead, trail;
     if (secondary == null) {
@@ -55,31 +56,26 @@ class Setting {
   }
 }
 
-void refreshLayer() {
-  refreshLay.value = !refreshLay.value;
-}
-
 class Layer {
   final Setting action;
   final List<Setting> list;
-  List<Widget> Function(BuildContext)? trailing;
+  List<Widget> Function(BuildContext)? leading, trailing;
 
   Layer({
     required this.action,
     required this.list,
+    this.leading,
     this.trailing,
   });
 }
 
 void showSheet({
-  required Layer Function(dynamic) func,
+  required Future<Layer> Function(dynamic) func,
   dynamic param,
   bool scroll = false,
   BuildContext? hidePrev,
 }) {
-  if (hidePrev != null) {
-    Navigator.of(hidePrev).pop();
-  }
+  if (hidePrev != null) Navigator.of(hidePrev).pop();
   showModalBottomSheet(
     context: navigatorKey.currentContext!,
     isScrollControlled: true,
@@ -91,4 +87,8 @@ void showSheet({
       return SheetModel(func: func, param: param);
     },
   );
+}
+
+void refreshLayer() {
+  refreshLay.value = !refreshLay.value;
 }

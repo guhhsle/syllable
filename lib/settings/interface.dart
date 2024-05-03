@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../data.dart';
-import '../functions/other.dart';
-import '../functions/prefs.dart';
-import '../layer.dart';
+import '../template/functions.dart';
+import '../template/layer.dart';
+import '../template/prefs.dart';
 
-Layer interface(dynamic d) => Layer(
+Future<Layer> interface(dynamic d) async => Layer(
       action: Setting(
         'Top',
         Icons.gradient_rounded,
@@ -49,31 +49,3 @@ Layer interface(dynamic d) => Layer(
         ),
       ],
     );
-Layer themeMap(dynamic p) {
-  p is bool;
-  Layer layer = Layer(
-      action: Setting(
-        pf[p ? 'primary' : 'background'],
-        p ? Icons.colorize_rounded : Icons.tonality_rounded,
-        '',
-        (c) => fetchColor(p),
-      ),
-      list: []);
-  for (int i = 0; i < colors.length; i++) {
-    String name = colors.keys.toList()[i];
-    layer.list.add(
-      Setting(
-        name,
-        iconsTheme[name]!,
-        '',
-        (c) => setPref(
-          p ? 'primary' : 'background',
-          name,
-          refresh: true,
-        ),
-        iconColor: colors.values.elementAt(i),
-      ),
-    );
-  }
-  return layer;
-}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syllable/settings/cursor.dart';
-import '../layer.dart';
+import '../template/layer.dart';
+import '../template/theme.dart';
 import '../widgets/body.dart';
 import 'book.dart';
 import 'interface.dart';
@@ -13,7 +14,7 @@ class PageSettings extends StatefulWidget {
 }
 
 class PageSettingsState extends State<PageSettings> {
-  Map<String, Layer Function(dynamic)> map = {
+  Map<String, Future<Layer> Function(dynamic)> map = {
     'Interface': interface,
     'Cursor': cursor,
     'Book': book,
@@ -32,13 +33,10 @@ class PageSettingsState extends State<PageSettings> {
           itemCount: map.length,
           itemBuilder: (context, index) => ListTile(
             title: Text(map.keys.elementAt(index)),
-            leading: Icon(
-              map.values.elementAt(index)(true).action.icon,
-            ),
             onTap: () => showSheet(
               func: map.values.elementAt(index),
               param: index == 2,
-              scroll: index > 2,
+              scroll: index > 0,
             ),
           ),
         ),

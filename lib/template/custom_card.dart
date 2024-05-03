@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../functions/other.dart';
-import '../layer.dart';
+import 'functions.dart';
+import 'layer.dart';
 
 class CustomCard extends StatelessWidget {
   final Setting setting;
@@ -8,12 +8,12 @@ class CustomCard extends StatelessWidget {
 
   const CustomCard(
     this.setting, {
-    Key? key,
+    super.key,
     this.margin = const EdgeInsets.symmetric(
       vertical: 16,
       horizontal: 8,
     ),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +28,7 @@ class CustomCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: InkWell(
-          onTap: () {
-            setting.onTap(context);
-          },
+          onTap: () => setting.onTap(context),
           customBorder: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -39,21 +37,19 @@ class CustomCard extends StatelessWidget {
             height: 50,
             child: Row(
               children: [
-                setting.title != ''
-                    ? Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 22),
-                          child: Text(
-                            t(setting.title),
-                            overflow: TextOverflow.clip,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      )
-                    : const SizedBox(width: 22),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 22),
+                    child: Text(
+                      t(setting.title),
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(right: 16),
                   child: setting.trailing == ''

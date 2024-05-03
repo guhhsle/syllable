@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import '../functions/other.dart';
-import '../functions/prefs.dart';
-import '../layer.dart';
 import '../data.dart';
+import '../template/functions.dart';
+import '../template/layer.dart';
+import '../template/prefs.dart';
 
-Layer cursor(dynamic non) {
+Future<Layer> cursor(dynamic non) async {
   String initSyllables = '';
   for (String point in pf['syllables']) {
     initSyllables = initSyllables + point;

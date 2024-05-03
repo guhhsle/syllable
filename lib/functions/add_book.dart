@@ -6,8 +6,8 @@ import 'package:html/parser.dart';
 //import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'other.dart';
-import 'prefs.dart';
+import '../template/functions.dart';
+import '../template/prefs.dart';
 import 'reading.dart';
 
 Future<int> addBook() async {
