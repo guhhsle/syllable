@@ -79,7 +79,8 @@ class _HomeState extends State<Home> {
               height: double.infinity,
               child: Center(
                 child: RichText(
-                  textAlign: TextAlign.values.byName(pf['fontAlign'].toLowerCase()),
+                  textAlign:
+                      TextAlign.values.byName(pf['fontAlign'].toLowerCase()),
                   text: TextSpan(
                     style: TextStyle(
                       fontWeight: FontWeight.values[pf['fontBold'] ? 8 : 0],
@@ -90,10 +91,11 @@ class _HomeState extends State<Home> {
                     children: [
                       for (int i = 0; i < 5; i++)
                         TextSpan(
-                          text: text.substring(i == 0 ? 0 : d[i - 1], i == 4 ? null : d[i]),
+                          text: text.substring(
+                              i == 0 ? 0 : d[i - 1], i == 4 ? null : d[i]),
                           style: TextStyle(
                             backgroundColor: highlights[i],
-                            color: i == 0 || i == 4 ? null : cs.background,
+                            color: i == 0 || i == 4 ? null : cs.surface,
                           ),
                         ),
                     ],
