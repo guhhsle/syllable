@@ -24,6 +24,7 @@ Map pf = {
   'intensity': 20,
   'exponential': false,
   'cursorShift': 'Syllable',
+  'font': 'JetBrainsMono',
   'fontAlign': 'Start',
   //
   'book': '>Settings >Book >Open',
