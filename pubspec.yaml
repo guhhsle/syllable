@@ -37,3 +37,6 @@ flutter:
     - family: JetBrainsMono
       fonts:
         - asset : fonts/JetBrainsMono-Regular.ttf
+
+  assets:
+    - assets/translations/

@@ -50,7 +50,7 @@ Future<String> getInput(dynamic init, {String? hintText}) async {
         child: TextField(
           cursorColor: Colors.white,
           decoration: InputDecoration(
-            labelText: hintText,
+            labelText: t(hintText ?? ''),
             border: InputBorder.none,
             focusedBorder: InputBorder.none,
             enabledBorder: InputBorder.none,
@@ -78,12 +78,15 @@ void refreshInterface() {
   themeNotifier.value = theme(color(true), color(false));
 }
 
-Future<int> loadLocale() async {
-  final String response = await rootBundle.loadString(
-    'assets/translations/${pf['locale']}.json',
-  );
-  l = await jsonDecode(response);
-  return 0;
+Future<void> loadLocale() async {
+  try {
+    final String response = await rootBundle.loadString(
+      'assets/translations/${pf['locale']}.json',
+    );
+    l = await jsonDecode(response);
+  } catch (e) {
+    debugPrint(e.toString());
+  }
 }
 
 String t(dynamic d) {

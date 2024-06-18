@@ -6,6 +6,7 @@ import '../settings/book.dart';
 import '../settings/cursor.dart';
 
 Map pf = {
+  'locale': 'en',
   'background': 'Ivory',
   'primary': 'Gruv Dark',
   'backgroundDark': 'Gruv Dark',
