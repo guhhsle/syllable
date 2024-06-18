@@ -79,14 +79,10 @@ void refreshInterface() {
 }
 
 Future<void> loadLocale() async {
-  try {
-    final String response = await rootBundle.loadString(
-      'assets/translations/${pf['locale']}.json',
-    );
-    l = await jsonDecode(response);
-  } catch (e) {
-    debugPrint(e.toString());
-  }
+  final String response = await rootBundle.loadString(
+    'assets/translations/${pf['locale']}.json',
+  );
+  l = await jsonDecode(response);
 }
 
 String t(dynamic d) {
