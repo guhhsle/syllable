@@ -33,10 +33,10 @@ class _HomeState extends State<Home> {
         return Frame(
           title: InkWell(
             borderRadius: BorderRadius.circular(6),
-            onTap: () async {
-              int to = int.tryParse(await getInput('$pos')) ?? 0;
-              jumpTo(to);
-            },
+            onTap: () async => jumpTo(int.parse(await getInput(
+              pos,
+              'Jump to position',
+            ))),
             child: Text(
               ' ${addZero ? '0' : ''}$percent ',
               key: textKey,

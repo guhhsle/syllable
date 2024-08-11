@@ -33,15 +33,22 @@ Stream<Layer> themeMap(dynamic p) async* {
   var dispatcher = SchedulerBinding.instance.platformDispatcher;
   bool light = dispatcher.platformBrightness == Brightness.light;
   Layer layer = Layer(
-      action: Setting(
-        light
-            ? pf[p ? 'primary' : 'background']
-            : pf[p ? 'primaryDark' : 'backgroundDark'],
-        p ? Icons.colorize_rounded : Icons.tonality_rounded,
-        '',
-        (c) => fetchColor(p, light),
+    action: Setting(
+      light
+          ? pf[p ? 'primary' : 'background']
+          : pf[p ? 'primaryDark' : 'backgroundDark'],
+      p ? Icons.colorize_rounded : Icons.tonality_rounded,
+      '',
+      (c) => fetchColor(p, light),
+    ),
+    trailing: (c) => [
+      IconButton(
+        icon: const Icon(Icons.add_rounded),
+        onPressed: () => fetchColor(p, light),
       ),
-      list: []);
+    ],
+    list: [],
+  );
   for (int i = 0; i < colors.length; i++) {
     String name = colors.keys.toList()[i];
     layer.list.add(
@@ -65,7 +72,7 @@ Stream<Layer> themeMap(dynamic p) async* {
 
 Future<void> fetchColor(bool p, bool light) async {
   try {
-    String val = await getInput('', hintText: 'HEX value')
+    String val = await getInput('', 'HEX value')
       ..replaceAll('#', '');
     int.parse('0xFF$val');
     setPref(

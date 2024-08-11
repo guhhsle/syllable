@@ -5,7 +5,7 @@ import '../template/functions.dart';
 import '../template/layer.dart';
 import '../template/prefs.dart';
 
-Future<Layer> bookSet(dynamic d) async {
+Layer bookSet(dynamic d) {
   String initBreakpoints = '';
   for (String point in pf['breakpoints']) {
     initBreakpoints = initBreakpoints + point;
@@ -24,15 +24,16 @@ Future<Layer> bookSet(dynamic d) async {
       Setting(
         'Autoclear',
         Icons.gesture_rounded,
-        '${pf['autoclear']}',
+        pf['autoclear'],
         (c) => revPref('autoclear'),
       ),
       Setting(
         'Clear threshold',
         Icons.clear_all_rounded,
-        '${pf['clearThreshold']}',
+        pf['clearThreshold'],
         (c) async {
-          int? input = int.tryParse(await getInput('${pf['clearThreshold']}'));
+          int? input = int.tryParse(
+              await getInput(pf['clearThreshold'], 'Clear threshold'));
           if (input == null || input < 0) {
             showSnack('Invalid', false);
           } else {
@@ -43,9 +44,12 @@ Future<Layer> bookSet(dynamic d) async {
       Setting(
         'Preload',
         Icons.clear_all_rounded,
-        '${pf['preload']}',
+        pf['preload'],
         (c) async {
-          int? input = int.tryParse(await getInput('${pf['preload']}'));
+          int? input = int.tryParse(await getInput(
+            pf['preload'],
+            'Preload',
+          ));
           if (input == null || input < 0) {
             showSnack('Invalid', false);
           } else {
@@ -58,7 +62,7 @@ Future<Layer> bookSet(dynamic d) async {
         Icons.crop_16_9_rounded,
         initBreakpoints,
         (c) async {
-          String input = await getInput(initBreakpoints);
+          String input = await getInput(initBreakpoints, 'Breakpoints');
           List<String> next = [];
           for (int i = 0; i < input.length; i++) {
             next.add(input[i]);

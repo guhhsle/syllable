@@ -1,11 +1,10 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import '../data.dart';
 import '../template/functions.dart';
 import '../template/layer.dart';
 import '../template/prefs.dart';
 
-Future<Layer> cursorSet(dynamic non) async {
+Layer cursorSet(dynamic non) {
   String initSyllables = '';
   for (String point in pf['syllables']) {
     initSyllables = initSyllables + point;
@@ -15,9 +14,12 @@ Future<Layer> cursorSet(dynamic non) async {
     action: Setting(
       'Intensity',
       Icons.gesture_rounded,
-      '${pf['intensity']}',
+      pf['intensity'],
       (c) async {
-        int? input = int.tryParse(await getInput('${pf['intensity']}'));
+        int? input = int.tryParse(await getInput(
+          pf['intensity'],
+          'Intensity',
+        ));
         if (input == null || input < 0) {
           showSnack('Invalid', false);
         } else {
@@ -29,7 +31,7 @@ Future<Layer> cursorSet(dynamic non) async {
       Setting(
         'Exponential intensity',
         Icons.stacked_line_chart_rounded,
-        '${pf['exponential']}',
+        pf['exponential'],
         (c) => revPref(
           'exponential',
           refresh: true,
@@ -50,7 +52,7 @@ Future<Layer> cursorSet(dynamic non) async {
         Icons.crop_16_9_rounded,
         initSyllables,
         (c) async {
-          String input = await getInput(initSyllables);
+          String input = await getInput(initSyllables, 'Syllables');
           List<String> next = [];
           for (int i = 0; i < input.length; i++) {
             next.add(input[i]);
