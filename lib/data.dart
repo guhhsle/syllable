@@ -1,73 +1,87 @@
 import 'package:flutter/material.dart';
 import 'settings/interface.dart';
 import 'template/layer.dart';
-import 'template/theme.dart';
+import 'template/prefs.dart';
 import '../settings/book.dart';
 import '../settings/cursor.dart';
+import 'template/theme.dart';
+import 'template/tile.dart';
 
-Map pf = {
-  'locale': 'en',
-  'background': 'Ivory',
-  'primary': 'Gruv Dark',
-  'backgroundDark': 'Gruv Dark',
-  'primaryDark': 'Pink',
-  'appbar': 'Black',
-  //READING
-  'clearThreshold': 600,
-  'autoclear': true,
-  'animations': true,
-  'preload': 2000,
-  'fontSize': 16,
-  'fontBold': true,
-  'breakpoints': defaultBreakpoints.toList(),
-  'syllables': defaultSyllables.toList(),
-  //CURSOR
-  'intensity': 20,
-  'exponential': false,
-  'cursorShift': 'Syllable',
-  'font': 'JetBrainsMono',
-  'fontAlign': 'Start',
-  //
-  'book': '>Settings >Book >Open',
-  'position': 0,
-};
-final List<Setting> settings = [
-  Setting(
-      'Interface', Icons.toggle_on, '', (c) => showSheet(func: interfaceSet)),
-  Setting('Cursor', Icons.toggle_on, '', (c) => showSheet(func: cursorSet)),
-  Setting('Book', Icons.book_rounded, '', (c) => showSheet(func: bookSet)),
-  Setting('Primary', Icons.colorize_rounded, '',
-      (c) => showSheet(func: themeMap, param: true, scroll: true)),
-  Setting('Background', Icons.colorize_rounded, '',
-      (c) => showSheet(func: themeMap, param: false, scroll: true)),
+const locales = [
+  ...['Serbian', 'English', 'Spanish', 'German', 'French', 'Italian'],
+  ...['Polish', 'Portuguese', 'Russian', 'Slovenian', 'Japanese']
 ];
+const tops = ['Primary', 'Black', 'Transparent'];
+const initBreakpoints = ['(', ')', '-', '.', ',', '!', '?', ':', ';'];
+const initSyllables = ['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U', ''];
+const aligns = ['Left', 'Right', 'Center', 'Justify', 'Start', 'End'];
+const shifts = ['Syllable', '2 Syllables', '1', '2', '5'];
+
+enum Pref {
+  font('Font', 'JetBrainsMono', Icons.format_italic_rounded, ui: true),
+  locale('Language', 'English', Icons.language_rounded, ui: true, all: locales),
+  appbar('Top', 'Black', Icons.gradient_rounded, all: tops, ui: true),
+  background('Background', 'F0F8FF', Icons.tonality_rounded, ui: true),
+  primary('Primary', '000000', Icons.colorize_rounded, ui: true),
+  backgroundDark('Dark background', '0F0A0A', Icons.tonality_rounded, ui: true),
+  primaryDark('Dark primary', 'FEDBD0', Icons.colorize_rounded, ui: true),
+  debug('Developer', false, Icons.developer_mode_rounded),
+  //READING
+  clearTreshold('Clear threshold', 600, Icons.clear_all_rounded),
+  animations('Animations', true, Icons.animation_rounded),
+  autoclear('Autoclear', true, Icons.gesture_rounded),
+  preload('Preload', 2000, Icons.clear_all_rounded),
+  breakpoints('Breakpoints', initBreakpoints, Icons.crop_16_9_rounded),
+  intensity('Intensity', 20, Icons.gesture_rounded),
+  exponential('Exponential intensity', false, Icons.stacked_line_chart_rounded),
+  cursorShift('Cursor shift', 'Syllable', Icons.space_bar_rounded, all: shifts),
+  syllables('Syllables', initSyllables, Icons.crop_16_9_rounded),
+  fontSize('Font size', 16, Icons.format_size_rounded, ui: true),
+  fontBold('Bold', true, Icons.format_bold_rounded, ui: true),
+  fontAlign('Text align', 'Start', Icons.format_align_justify,
+      ui: true, all: aligns),
+  position('Cursor position', 0, Icons.space_bar_rounded),
+  book('Book', '>Settings >Book >Open', Icons.book_rounded),
+  ;
+
+  final dynamic initial;
+  final List? all;
+  final String title;
+  final IconData icon;
+  final bool ui; //Changing it leads to UI rebuild
+
+  const Pref(this.title, this.initial, this.icon, {this.all, this.ui = false});
+
+  dynamic get value => Preferences.get(this);
+
+  Future set(dynamic val) => Preferences.set(this, val);
+
+  Future rev() => Preferences.rev(this);
+
+  Future next() => Preferences.next(this);
+
+  void nextByLayer({String suffix = ''}) =>
+      Preferences.nextByLayer(this, suffix: suffix);
+
+  @override
+  String toString() => name;
+}
+
+List<Tile> get settings {
+  return [
+    Tile('Interface', Icons.toggle_on, '',
+        onTap: (c) => showSheet(interfaceSet)),
+    Tile('Cursor', Icons.toggle_on, '', onTap: (c) => showSheet(cursorSet)),
+    Tile('Book', Icons.book_rounded, '', onTap: (c) => showSheet(bookSet)),
+    Tile('Primary', Icons.colorize_rounded, '',
+        onTap: (c) => showScrollSheet(ThemePref.toLayer, {'primary': true})),
+    Tile('Background', Icons.tonality_rounded, '',
+        onTap: (c) => showScrollSheet(ThemePref.toLayer, {'primary': false})),
+  ];
+}
 
 final GlobalKey textKey = GlobalKey();
 int bookLen = 0;
-const List<String> defaultBreakpoints = [
-  '(',
-  ')',
-  '-',
-  '.',
-  ',',
-  '!',
-  '?',
-  ':',
-  ';'
-];
-const List<String> defaultSyllables = [
-  'a',
-  'A',
-  'e',
-  'E',
-  'i',
-  'I',
-  'o',
-  'O',
-  'u',
-  'U',
-  ''
-];
 
 bool clearing = false;
-int position = pf['preload'];
+int position = Pref.preload.value;

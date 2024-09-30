@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../data.dart';
 import '../template/data.dart';
-import '../template/prefs.dart';
+import '../data.dart';
 
 String text = '';
 ValueNotifier<List<int>> dots = ValueNotifier([0, 0, 0, 0]);
@@ -11,13 +10,13 @@ List<int> d = [0, 0, 0, 0];
 Future nextSyllable() async {
   d = dots.value.toList();
   clearing = true;
-  if (d[0] > pf['clearThreshold']) await clearThreshold(false);
+  if (d[0] > Pref.clearTreshold.value) await clearThreshold(false);
 
-  if (text.length - d[3] < pf['preload']) {
+  if (text.length - d[3] < Pref.preload.value) {
     int currentEnd = position + text.length;
-    int? nextEnd = currentEnd + pf['preload'] as int;
-    if (nextEnd > pf['book'].length) nextEnd = null;
-    text += pf['book'].substring(currentEnd, nextEnd);
+    int? nextEnd = currentEnd + Pref.preload.value as int;
+    if (nextEnd > Pref.book.value.length) nextEnd = null;
+    text += Pref.book.value.substring(currentEnd, nextEnd);
   }
   await moveCursor();
   if (d[2] >= d[3]) await expandBehind();
@@ -28,16 +27,16 @@ Future nextSyllable() async {
 Future<void> moveCursor() async {
   d[1] = d[2];
   d[2] += 2;
-  String shift = pf['cursorShift'];
+  String shift = Pref.cursorShift.value;
   if (shift.contains('Syllable')) {
-    while (!pf['syllables'].contains(text[d[2]])) {
+    while (!Pref.syllables.value.contains(text[d[2]])) {
       if (d[2] >= d[3]) await expandBehind();
       d[2]++;
     }
   }
   if (shift == '2 Syllables') {
     d[2] += 2;
-    while (!pf['syllables'].contains(text[d[2]])) {
+    while (!Pref.syllables.value.contains(text[d[2]])) {
       if (d[2] >= d[3]) await expandBehind();
       d[2]++;
     }
@@ -50,9 +49,10 @@ Future<void> moveCursor() async {
 
 Future<void> expandBehind() async {
   int offset = 16;
-  setPref('position', position + d[1]);
-  final int load = pf['preload'] ~/ 5;
-  while (offset < load && !pf['breakpoints'].contains(text[d[3] + offset])) {
+  Pref.position.set(position + d[1]);
+  final int load = Pref.preload.value ~/ 5;
+  while (
+      offset < load && !Pref.breakpoints.value.contains(text[d[3] + offset])) {
     offset++;
   }
   offset++;
@@ -62,7 +62,7 @@ Future<void> expandBehind() async {
 }
 
 Future animateOffset(int j, int inc) async {
-  if (pf['animations']) {
+  if (Pref.animations.value) {
     const int div = 10;
     int step = (inc / div).floor();
     for (int i = 0; i < div; i++) {
@@ -82,7 +82,8 @@ Future clearThreshold(bool auto) async {
   clearing = true;
   RenderBox ts = textKey.currentContext?.findRenderObject() as RenderBox;
   double charWidth = ts.size.width / 9;
-  double devWidth = MediaQuery.of(navigatorKey.currentContext!).size.width - 16; //16 Padding
+  double devWidth =
+      MediaQuery.of(navigatorKey.currentContext!).size.width - 16; //16 Padding
   int row = devWidth ~/ charWidth;
 
   while (d[0] > row * 2) {
@@ -98,22 +99,22 @@ Future clearThreshold(bool auto) async {
     for (int j = 0; j < d.length; j++) {
       d[j] -= i;
     }
-    if (pf['animations']) {
+    if (Pref.animations.value) {
       dots.value = d.toList();
       await Future.delayed(const Duration(milliseconds: 20));
     }
   }
-  position = pf['book'].indexOf(text.substring(0, d[3]));
+  position = Pref.book.value.indexOf(text.substring(0, d[3]));
   dots.value = d.toList();
   clearing = false;
 }
 
 void jumpTo(int i) {
   position = i;
-  int end = i + pf['preload'] as int;
-  bookLen = pf['book'].length;
+  int end = i + Pref.preload.value as int;
+  bookLen = Pref.book.value.length;
   if (end > bookLen) end = bookLen;
-  text = pf['book'].substring(i, end);
-  setPref('position', i);
+  text = Pref.book.value.substring(i, end);
+  Pref.position.set(i);
   dots.value = [0, 0, 0, 0];
 }

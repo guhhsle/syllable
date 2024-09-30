@@ -1,64 +1,33 @@
 import 'package:flutter/material.dart';
-import '../data.dart';
 import '../template/functions.dart';
 import '../template/layer.dart';
-import '../template/prefs.dart';
+import '../template/tile.dart';
+import '../data.dart';
 
 Layer cursorSet(dynamic non) {
-  String initSyllables = '';
-  for (String point in pf['syllables']) {
-    initSyllables = initSyllables + point;
+  String syllables = '';
+  for (String point in Pref.syllables.value) {
+    syllables = syllables + point;
   }
 
   return Layer(
-    action: Setting(
-      'Intensity',
-      Icons.gesture_rounded,
-      pf['intensity'],
-      (c) async {
-        int? input = int.tryParse(await getInput(
-          pf['intensity'],
-          'Intensity',
-        ));
-        if (input == null || input < 0) {
-          showSnack('Invalid', false);
-        } else {
-          setPref('intensity', input);
-        }
-      },
-    ),
+    action: Tile.fromPref(Pref.intensity, onPrefInput: (i) {
+      Pref.intensity.set(int.parse(i).clamp(0, double.infinity));
+    }),
     list: [
-      Setting(
-        'Exponential intensity',
-        Icons.stacked_line_chart_rounded,
-        pf['exponential'],
-        (c) => revPref(
-          'exponential',
-          refresh: true,
-        ),
-      ),
-      Setting(
-        'Cursor shift',
-        Icons.space_bar_rounded,
-        pf['cursorShift'],
-        (c) => nextPref(
-          'cursorShift',
-          ['Syllable', '2 Syllables', '1', '2', '5'],
-          refresh: true,
-        ),
-      ),
-      Setting(
+      Tile.fromPref(Pref.exponential),
+      Tile.fromPref(Pref.cursorShift),
+      Tile(
         'Syllables',
         Icons.crop_16_9_rounded,
         initSyllables,
-        (c) async {
-          String input = await getInput(initSyllables, 'Syllables');
+        onTap: (c) => getInput(syllables, 'Syllables').then((input) {
           List<String> next = [];
           for (int i = 0; i < input.length; i++) {
             next.add(input[i]);
           }
-          setPref('syllables', next);
-        },
+          Pref.syllables.set(next);
+        }),
       ),
     ],
   );

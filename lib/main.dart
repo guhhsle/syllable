@@ -7,10 +7,7 @@ import 'widgets/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initPrefs();
-  jumpTo(pf['position']);
-  runApp(const App(
-    title: 'Syllable',
-    child: Home(),
-  ));
+  await Preferences().init();
+  jumpTo(Pref.position.value);
+  runApp(const App(title: 'Syllable', child: Home()));
 }

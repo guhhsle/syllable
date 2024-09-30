@@ -8,10 +8,10 @@ class Frame extends StatelessWidget {
 
   const Frame({
     super.key,
+    this.automaticallyImplyLeading = true,
     this.title = const SizedBox(),
     this.actions = const [],
     this.child,
-    this.automaticallyImplyLeading = true,
   });
 
   @override
@@ -20,10 +20,7 @@ class Frame extends StatelessWidget {
       appBar: AppBar(
         title: title,
         automaticallyImplyLeading: automaticallyImplyLeading,
-        actions: [
-          ...actions,
-          const SizedBox(width: 8),
-        ],
+        actions: [...actions, const SizedBox(width: 8)],
       ),
       body: SizedBox(
         height: double.infinity,
@@ -37,9 +34,7 @@ class Frame extends StatelessWidget {
             margin: EdgeInsets.zero,
             shadowColor: Colors.transparent,
             shape: const RoundedRectangleBorder(),
-            child: ClipRRect(
-              child: child,
-            ),
+            child: ClipRRect(child: child),
           ),
         ),
       ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../data.dart';
-import '../functions/reading.dart';
-import '../template/functions.dart';
-import '../template/settings.dart';
 import 'frame.dart';
+import '../template/functions.dart';
+import '../functions/reading.dart';
+import '../template/settings.dart';
+import '../data.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -41,8 +41,8 @@ class _HomeState extends State<Home> {
               ' ${addZero ? '0' : ''}$percent ',
               key: textKey,
               style: TextStyle(
-                fontSize: pf['fontSize'].toDouble(),
-                fontWeight: FontWeight.values[pf['fontBold'] ? 8 : 0],
+                fontSize: Pref.fontSize.value.toDouble(),
+                fontWeight: FontWeight.values[Pref.fontBold.value ? 8 : 0],
               ),
             ),
           ),
@@ -54,18 +54,17 @@ class _HomeState extends State<Home> {
           ],
           child: GestureDetector(
             onPanEnd: (details) async {
-              if (pf['autoclear']) {
-                d = snap.toList();
-                await clearThreshold(true);
-                dots.value = d.toList();
-              }
+              if (!Pref.autoclear.value) return;
+              d = snap.toList();
+              await clearThreshold(true);
+              dots.value = d.toList();
             },
             onPanUpdate: (d) async {
               if (!clearing) {
-                if (pf['exponential']) {
-                  distance += d.delta.distanceSquared * pf['intensity'];
+                if (Pref.exponential.value) {
+                  distance += d.delta.distanceSquared * Pref.intensity.value;
                 } else {
-                  distance += d.delta.distance * pf['intensity'];
+                  distance += d.delta.distance * Pref.intensity.value;
                 }
                 while (distance > 1000) {
                   await nextSyllable();
@@ -79,13 +78,15 @@ class _HomeState extends State<Home> {
               height: double.infinity,
               child: Center(
                 child: RichText(
-                  textAlign:
-                      TextAlign.values.byName(pf['fontAlign'].toLowerCase()),
+                  textAlign: TextAlign.values.byName(
+                    Pref.fontAlign.value.toLowerCase(),
+                  ),
                   text: TextSpan(
                     style: TextStyle(
-                      fontWeight: FontWeight.values[pf['fontBold'] ? 8 : 0],
+                      fontWeight:
+                          FontWeight.values[Pref.fontBold.value ? 8 : 0],
                       color: cs.primary,
-                      fontSize: pf['fontSize'].toDouble(),
+                      fontSize: Pref.fontSize.value.toDouble(),
                       fontFamily: 'JetBrainsMono',
                     ),
                     children: [

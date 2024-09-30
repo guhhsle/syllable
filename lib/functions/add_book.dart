@@ -6,8 +6,8 @@ import 'package:html/parser.dart';
 //import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'dart:io';
+import '../data.dart';
 import '../template/functions.dart';
-import '../template/prefs.dart';
 import 'reading.dart';
 
 Future<int> addBook() async {
@@ -76,7 +76,7 @@ Future<int> addBook() async {
   } catch (e) {
     showSnack('$e', false);
   }
-  setPref('book', book);
+  Pref.book.set(book);
   jumpTo(0);
   return 0;
 }

@@ -1,75 +1,36 @@
 import 'package:flutter/material.dart';
 import '../functions/add_book.dart';
-import '../data.dart';
 import '../template/functions.dart';
 import '../template/layer.dart';
-import '../template/prefs.dart';
+import '../template/tile.dart';
+import '../data.dart';
 
 Layer bookSet(dynamic d) {
-  String initBreakpoints = '';
-  for (String point in pf['breakpoints']) {
-    initBreakpoints = initBreakpoints + point;
+  String breakpoints = '';
+  for (String point in Pref.breakpoints.value) {
+    breakpoints = breakpoints + point;
   }
   return Layer(
-    action: Setting(
-      'Open file',
-      Icons.book_rounded,
-      '',
-      (c) async {
-        Navigator.of(c).pop();
-        await addBook();
-      },
-    ),
+    action: Tile('Open file', Icons.book_rounded, '', onTap: (c) async {
+      Navigator.of(c).pop();
+      await addBook();
+    }),
     list: [
-      Setting(
-        'Autoclear',
-        Icons.gesture_rounded,
-        pf['autoclear'],
-        (c) => revPref('autoclear'),
-      ),
-      Setting(
-        'Clear threshold',
-        Icons.clear_all_rounded,
-        pf['clearThreshold'],
-        (c) async {
-          int? input = int.tryParse(
-              await getInput(pf['clearThreshold'], 'Clear threshold'));
-          if (input == null || input < 0) {
-            showSnack('Invalid', false);
-          } else {
-            setPref('clearThreshold', input);
-          }
-        },
-      ),
-      Setting(
-        'Preload',
-        Icons.clear_all_rounded,
-        pf['preload'],
-        (c) async {
-          int? input = int.tryParse(await getInput(
-            pf['preload'],
-            'Preload',
-          ));
-          if (input == null || input < 0) {
-            showSnack('Invalid', false);
-          } else {
-            setPref('preload', input);
-          }
-        },
-      ),
-      Setting(
-        'Breakpoints',
-        Icons.crop_16_9_rounded,
-        initBreakpoints,
-        (c) async {
-          String input = await getInput(initBreakpoints, 'Breakpoints');
-          List<String> next = [];
-          for (int i = 0; i < input.length; i++) {
-            next.add(input[i]);
-          }
-          setPref('breakpoints', next);
-        },
-      ),
+      Tile.fromPref(Pref.autoclear),
+      Tile.fromPref(Pref.clearTreshold, onPrefInput: (i) {
+        Pref.clearTreshold.set(int.parse(i).clamp(0, double.infinity));
+      }),
+      Tile.fromPref(Pref.preload, onPrefInput: (i) {
+        Pref.preload.set(int.parse(i).clamp(0, double.infinity));
+      }),
+      Tile('Breakpoints', Pref.breakpoints.icon, breakpoints, onTap: (c) async {
+        String input = await getInput(initBreakpoints, 'Breakpoints');
+        List<String> next = [];
+        for (int i = 0; i < input.length; i++) {
+          next.add(input[i]);
+        }
+        Pref.breakpoints.set(next);
+      })
     ],
   );
 }
