@@ -8,7 +8,7 @@ import 'tile.dart';
 
 class Preferences extends ChangeNotifier {
   static final Preferences instance = Preferences.internal();
-  static late final SharedPreferences prefs;
+  static late SharedPreferences prefs;
 
   factory Preferences() => instance;
 
@@ -16,7 +16,9 @@ class Preferences extends ChangeNotifier {
 
   static void notify() => instance.notifyListeners();
 
-  Future init() => SharedPreferences.getInstance();
+  Future<void> init() async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
   static Future rev(Pref pref) => set(pref, !pref.value);
 
@@ -47,15 +49,14 @@ class Preferences extends ChangeNotifier {
   }
 
   static void nextByLayer(Pref pref, {String suffix = ''}) {
-    Layer layerFunc(Map map) {
-      return Layer(
-        action: Tile(pref.title, Icons.memory_rounded, '${pref.value}$suffix'),
-        list: pref.all!.map((e) {
-          return Tile('$e$suffix', checked(e == pref.value), '', onTap: (c) {
-            pref.set(e);
-          });
-        }).toList(),
-      );
+    Layer layerFunc(Layer l) {
+      l.action = Tile(pref.title, Icons.memory_rounded, '${pref.value}$suffix');
+      l.list = pref.all!.map((e) {
+        return Tile('$e$suffix', checked(e == pref.value), '', () {
+          pref.set(e);
+        });
+      });
+      return l;
     }
 
     if (pref.all!.length > 5) {

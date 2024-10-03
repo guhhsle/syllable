@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'settings/interface.dart';
 import 'template/layer.dart';
 import 'template/prefs.dart';
-import '../settings/book.dart';
-import '../settings/cursor.dart';
 import 'template/theme.dart';
 import 'template/tile.dart';
+import '../settings/cursor.dart';
+import '../settings/book.dart';
 
 const locales = [
   ...['Serbian', 'English', 'Spanish', 'German', 'French', 'Italian'],
@@ -69,14 +69,13 @@ enum Pref {
 
 List<Tile> get settings {
   return [
-    Tile('Interface', Icons.toggle_on, '',
-        onTap: (c) => showSheet(interfaceSet)),
-    Tile('Cursor', Icons.toggle_on, '', onTap: (c) => showSheet(cursorSet)),
-    Tile('Book', Icons.book_rounded, '', onTap: (c) => showSheet(bookSet)),
+    Tile('Interface', Icons.toggle_on, '', () => showSheet(interfaceSet)),
+    Tile('Cursor', Icons.toggle_on, '', () => showSheet(cursorSet)),
+    Tile('Book', Icons.book_rounded, '', () => showSheet(bookSet)),
     Tile('Primary', Icons.colorize_rounded, '',
-        onTap: (c) => showScrollSheet(ThemePref.toLayer, {'primary': true})),
+        () => showScrollSheet(ThemePref.toLayer, {'primary': true})),
     Tile('Background', Icons.tonality_rounded, '',
-        onTap: (c) => showScrollSheet(ThemePref.toLayer, {'primary': false})),
+        () => showScrollSheet(ThemePref.toLayer, {'primary': false})),
   ];
 }
 
