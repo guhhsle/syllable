@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Frame extends StatelessWidget {
-  final Widget title;
+  final bool automaticallyImplyLeading;
   final List<Widget> actions;
   final Widget? child;
-  final bool automaticallyImplyLeading;
+  final Widget title;
 
   const Frame({
     super.key,

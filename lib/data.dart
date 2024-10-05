@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'settings/interface.dart';
-import 'template/layer.dart';
 import 'template/prefs.dart';
 import 'template/theme.dart';
 import 'template/tile.dart';
@@ -60,8 +59,9 @@ enum Pref {
 
   Future next() => Preferences.next(this);
 
-  void nextByLayer({String suffix = ''}) =>
-      Preferences.nextByLayer(this, suffix: suffix);
+  void nextByLayer({String suffix = ''}) {
+    NextByLayer(this, suffix: suffix);
+  }
 
   @override
   String toString() => name;
@@ -69,18 +69,15 @@ enum Pref {
 
 List<Tile> get settings {
   return [
-    Tile('Interface', Icons.toggle_on, '', () => showSheet(interfaceSet)),
-    Tile('Cursor', Icons.toggle_on, '', () => showSheet(cursorSet)),
-    Tile('Book', Icons.book_rounded, '', () => showSheet(bookSet)),
-    Tile('Primary', Icons.colorize_rounded, '',
-        () => showScrollSheet(ThemePref.toLayer, {'primary': true})),
-    Tile('Background', Icons.tonality_rounded, '',
-        () => showScrollSheet(ThemePref.toLayer, {'primary': false})),
+    Tile('Interface', Icons.toggle_on, '', InterfaceLayer().show),
+    Tile('Cursor', Icons.toggle_on, '', CursorLayer().show),
+    Tile('Book', Icons.book_rounded, '', BookLayer().show),
+    Tile('Primary', Icons.colorize_rounded, '', ThemeLayer(true).show),
+    Tile('Background', Icons.tonality_rounded, '', ThemeLayer(false).show),
   ];
 }
 
 final GlobalKey textKey = GlobalKey();
 int bookLen = 0;
-
 bool clearing = false;
 int position = Pref.preload.value;
