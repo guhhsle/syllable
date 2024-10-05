@@ -2,7 +2,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/material.dart';
 import 'functions.dart';
 import 'layer.dart';
-import 'prefs.dart';
 import 'dart:math';
 import 'data.dart';
 import 'tile.dart';
@@ -10,7 +9,7 @@ import '../data.dart';
 
 class ThemeLayer extends Layer {
   bool primary;
-  ThemeLayer(this.primary) : super([Preferences()]);
+  ThemeLayer(this.primary);
   @override
   void construct() {
     scroll = true;

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import '../functions/add_book.dart';
 import '../template/functions.dart';
-import '../template/prefs.dart';
 import '../template/layer.dart';
 import '../template/tile.dart';
 import '../data.dart';
 
 class BookLayer extends Layer {
-  BookLayer() : super([Preferences()]);
   @override
   void construct() {
     String breakpoints = '';

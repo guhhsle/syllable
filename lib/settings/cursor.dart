@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import '../template/functions.dart';
-import '../template/prefs.dart';
 import '../template/layer.dart';
 import '../template/tile.dart';
 import '../data.dart';
 
 class CursorLayer extends Layer {
-  CursorLayer() : super([Preferences()]);
   @override
   void construct() {
     String syllables = '';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'visual_layer.dart';
+import 'prefs.dart';
 import 'data.dart';
 import 'tile.dart';
 
@@ -9,14 +10,12 @@ abstract class Layer extends ChangeNotifier {
   Iterable<Tile> list = [];
   Tile action = Tile();
   bool scroll = false;
-
-  Layer([List<Listenable>? listenables]) {
-    listenables?.forEach(listenTo);
-  }
+  List<Listenable> listened = [];
 
   void listenTo(Listenable listenable) {
+    if (listened.contains(listenable)) return;
+    listened.add(listenable);
     listenable.addListener(notifyListeners);
-    notifyListeners();
   }
 
   BuildContext get context {
@@ -27,6 +26,7 @@ abstract class Layer extends ChangeNotifier {
   void construct();
 
   Layer show() {
+    listenTo(Preferences());
     construct();
     showModalBottomSheet(
       barrierLabel: 'Barrier',

@@ -1,10 +1,8 @@
 import '../template/layer.dart';
-import '../template/prefs.dart';
 import '../template/tile.dart';
 import '../data.dart';
 
 class InterfaceLayer extends Layer {
-  InterfaceLayer() : super([Preferences()]);
   @override
   void construct() {
     action = Tile.fromPref(Pref.appbar);

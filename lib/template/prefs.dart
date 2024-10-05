@@ -52,7 +52,7 @@ class Preferences extends ChangeNotifier {
 class NextByLayer extends Layer {
   Pref pref;
   String suffix;
-  NextByLayer(this.pref, {this.suffix = ''}) : super([Preferences()]);
+  NextByLayer(this.pref, {this.suffix = ''});
   @override
   void construct() {
     scroll = pref.all!.length > 5;
