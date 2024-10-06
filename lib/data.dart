@@ -61,7 +61,7 @@ enum Pref<T> {
   Future next() => Preferences.next(this);
 
   void nextByLayer({String suffix = ''}) {
-    NextByLayer(this, suffix: suffix);
+    NextByLayer(this, suffix: suffix).show();
   }
 
   @override
