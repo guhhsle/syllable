@@ -19,10 +19,10 @@ class _VisualLayerState extends State<VisualLayer> {
 
   @override
   void initState() {
+    super.initState();
     for (var listenable in widget.layer.listened) {
       listenable.addListener(layerChange);
     }
-    super.initState();
   }
 
   @override
