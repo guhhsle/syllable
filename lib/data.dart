@@ -39,7 +39,7 @@ enum Pref {
   fontBold('Bold', true, Icons.format_bold_rounded, ui: true),
   fontAlign('Text align', 'Start', Icons.format_align_justify,
       ui: true, all: aligns),
-  position('Cursor position', 0, Icons.space_bar_rounded),
+  position('Cursor position', 0, Icons.space_bar_rounded, backend: true),
   book('Book', '>Settings >Book >Open', Icons.book_rounded),
   ;
 
@@ -47,9 +47,10 @@ enum Pref {
   final List? all;
   final String title;
   final IconData icon;
-  final bool ui; //Changing it leads to UI rebuild
+  final bool ui, backend; //Changing it leads to UI rebuild
 
-  const Pref(this.title, this.initial, this.icon, {this.all, this.ui = false});
+  const Pref(this.title, this.initial, this.icon,
+      {this.all, this.ui = false, this.backend = false});
 
   dynamic get value => Preferences.get(this);
 
