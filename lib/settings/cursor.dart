@@ -13,7 +13,7 @@ class CursorLayer extends Layer {
     }
 
     action = Tile.fromPref(Pref.intensity, onPrefInput: (i) {
-      Pref.intensity.set(int.parse(i).clamp(0, double.infinity));
+      Pref.intensity.set(int.parse(i).clamp(0, double.infinity).toInt());
     });
     list = [
       Tile.fromPref(Pref.exponential),

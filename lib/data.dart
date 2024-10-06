@@ -16,7 +16,7 @@ const initSyllables = ['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U', ''];
 const aligns = ['Left', 'Right', 'Center', 'Justify', 'Start', 'End'];
 const shifts = ['Syllable', '2 Syllables', '1', '2', '5'];
 
-enum Pref {
+enum Pref<T> {
   font('Font', 'JetBrainsMono', Icons.format_italic_rounded, ui: true),
   locale('Language', 'English', Icons.language_rounded, ui: true, all: locales),
   appbar('Top', 'Black', Icons.gradient_rounded, all: tops, ui: true),
@@ -43,8 +43,8 @@ enum Pref {
   book('Book', '>Settings >Book >Open', Icons.book_rounded),
   ;
 
-  final dynamic initial;
-  final List? all;
+  final T initial;
+  final List<T>? all;
   final String title;
   final IconData icon;
   final bool ui, backend; //Changing it leads to UI rebuild
@@ -52,9 +52,9 @@ enum Pref {
   const Pref(this.title, this.initial, this.icon,
       {this.all, this.ui = false, this.backend = false});
 
-  dynamic get value => Preferences.get(this);
+  T get value => Preferences.get(this);
 
-  Future set(dynamic val) => Preferences.set(this, val);
+  Future set(T val) => Preferences.set(this, val);
 
   Future rev() => Preferences.rev(this);
 

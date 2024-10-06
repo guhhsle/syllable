@@ -9,7 +9,7 @@ class InterfaceLayer extends Layer {
     list = [
       Tile.fromPref(Pref.animations),
       Tile.fromPref(Pref.fontSize, onPrefInput: (i) {
-        Pref.fontSize.set(int.parse(i).clamp(0, double.infinity));
+        Pref.fontSize.set(int.parse(i).clamp(0, double.infinity).toInt());
       }),
       Tile.fromPref(Pref.fontBold),
       Tile.fromPref(Pref.fontAlign),

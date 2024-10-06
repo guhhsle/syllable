@@ -14,7 +14,7 @@ Future nextSyllable() async {
 
   if (text.length - d[3] < Pref.preload.value) {
     int currentEnd = position + text.length;
-    int? nextEnd = currentEnd + Pref.preload.value as int;
+    int? nextEnd = currentEnd + Pref.preload.value;
     if (nextEnd > Pref.book.value.length) nextEnd = null;
     text += Pref.book.value.substring(currentEnd, nextEnd);
   }
@@ -111,7 +111,7 @@ Future clearThreshold(bool auto) async {
 
 void jumpTo(int i) {
   position = i;
-  int end = i + Pref.preload.value as int;
+  int end = i + Pref.preload.value;
   bookLen = Pref.book.value.length;
   if (end > bookLen) end = bookLen;
   text = Pref.book.value.substring(i, end);

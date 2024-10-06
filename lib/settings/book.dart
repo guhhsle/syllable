@@ -19,10 +19,10 @@ class BookLayer extends Layer {
     list = [
       Tile.fromPref(Pref.autoclear),
       Tile.fromPref(Pref.clearTreshold, onPrefInput: (i) {
-        Pref.clearTreshold.set(int.parse(i).clamp(0, double.infinity));
+        Pref.clearTreshold.set(int.parse(i).clamp(0, double.infinity).toInt());
       }),
       Tile.fromPref(Pref.preload, onPrefInput: (i) {
-        Pref.preload.set(int.parse(i).clamp(0, double.infinity));
+        Pref.preload.set(int.parse(i).clamp(0, double.infinity).toInt());
       }),
       Tile('Breakpoints', Pref.breakpoints.icon, breakpoints, () async {
         String input = await getInput(initBreakpoints, 'Breakpoints');
