@@ -77,6 +77,6 @@ Future<int> addBook() async {
     showSnack('$e', false);
   }
   Pref.book.set(book);
-  jumpTo(0);
+  Book().jumpTo(0);
   return 0;
 }

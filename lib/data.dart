@@ -28,7 +28,7 @@ enum Pref<T> {
   //READING
   animations('Animations', true, Icons.animation_rounded),
   preload('Preload', 2000, Icons.clear_all_rounded),
-  breakpoints('Breakpoints', initBreakpoints, Icons.crop_16_9_rounded),
+  breakpoints('Sentence breaks', initBreakpoints, Icons.crop_16_9_rounded),
   intensity('Intensity', 20, Icons.gesture_rounded),
   exponential('Exponential intensity', false, Icons.stacked_line_chart_rounded),
   cursorShift('Cursor shift', 'Syllable', Icons.space_bar_rounded, all: shifts),
@@ -37,18 +37,17 @@ enum Pref<T> {
   fontBold('Bold', true, Icons.format_bold_rounded, ui: true),
   fontAlign('Text align', 'Start', Icons.format_align_justify,
       ui: true, all: aligns),
-  position('Cursor position', 0, Icons.space_bar_rounded, backend: true),
+  position(null, 0, null),
   book('Book', '>Settings >Book >Open', Icons.book_rounded),
   ;
 
   final T initial;
   final List<T>? all;
-  final String title;
-  final IconData icon;
-  final bool ui, backend; //Changing it leads to UI rebuild
+  final String? title;
+  final IconData? icon;
+  final bool ui; //Changing it leads to UI rebuild
 
-  const Pref(this.title, this.initial, this.icon,
-      {this.all, this.ui = false, this.backend = false});
+  const Pref(this.title, this.initial, this.icon, {this.all, this.ui = false});
 
   T get value => Preferences.get(this);
 
@@ -77,6 +76,3 @@ List<Tile> get settings {
 }
 
 final GlobalKey textKey = GlobalKey();
-int bookLen = 0;
-bool clearing = false;
-int position = Pref.preload.value;

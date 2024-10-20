@@ -23,17 +23,17 @@ class _HomeState extends State<Home> {
       cs.primary.withOpacity(0.6),
       null,
     ];
-    return ValueListenableBuilder(
-      valueListenable: dots,
-      builder: (context, snap, child) {
+    return ListenableBuilder(
+      listenable: Book(),
+      builder: (context, child) {
         double distance = 0;
-        int pos = position + snap[1];
-        bool addZero = pos / bookLen < 0.1;
-        String percent = '${(pos * 100 / bookLen).toStringAsFixed(2)} %';
+        int pos = Book().position + Book().dots[1];
+        bool addZero = pos / Book().length < 0.1;
+        String percent = '${(pos * 100 / Book().length).toStringAsFixed(2)} %';
         return Frame(
           title: InkWell(
             borderRadius: BorderRadius.circular(6),
-            onTap: () async => jumpTo(int.parse(await getInput(
+            onTap: () async => Book().jumpTo(int.parse(await getInput(
               pos,
               'Jump to position',
             ))),
@@ -53,21 +53,17 @@ class _HomeState extends State<Home> {
             ),
           ],
           child: GestureDetector(
-            onPanEnd: (details) async {
-              d = snap.toList();
-              await clearThreshold();
-            },
+            onPanEnd: (details) => Book().clearThreshold(),
             onPanUpdate: (d) async {
-              if (!clearing) {
-                if (Pref.exponential.value) {
-                  distance += d.delta.distanceSquared * Pref.intensity.value;
-                } else {
-                  distance += d.delta.distance * Pref.intensity.value;
-                }
-                while (distance > 1000) {
-                  await nextSyllable();
-                  distance -= 1000;
-                }
+              if (Book().clearing) return;
+              if (Pref.exponential.value) {
+                distance += d.delta.distanceSquared * Pref.intensity.value;
+              } else {
+                distance += d.delta.distance * Pref.intensity.value;
+              }
+              while (distance > 1000) {
+                await Book().nextSyllable();
+                distance -= 1000;
               }
             },
             child: Container(
@@ -90,8 +86,9 @@ class _HomeState extends State<Home> {
                     children: [
                       for (int i = 0; i < 5; i++)
                         TextSpan(
-                          text: text.substring(
-                              i == 0 ? 0 : d[i - 1], i == 4 ? null : d[i]),
+                          text: Book().loadedText.substring(
+                              i == 0 ? 0 : Book().dots[i - 1],
+                              i == 4 ? null : Book().dots[i]),
                           style: TextStyle(
                             backgroundColor: highlights[i],
                             color: i == 0 || i == 4 ? null : cs.surface,

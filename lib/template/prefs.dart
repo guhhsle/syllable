@@ -54,7 +54,7 @@ class NextByLayer extends Layer {
   String suffix;
   NextByLayer(this.pref, {this.suffix = ''});
   @override
-  void construct() {
+  construct() {
     scroll = pref.all!.length > 5;
     action = Tile(
       pref.title,
@@ -64,6 +64,30 @@ class NextByLayer extends Layer {
     list = pref.all!.map((e) {
       return Tile('$e$suffix', checked(e == pref.value), '', () {
         pref.set(e);
+      });
+    });
+  }
+}
+
+class PrefAsList extends Layer {
+  Pref<List<String>> pref;
+  PrefAsList(this.pref);
+  @override
+  construct() {
+    scroll = true;
+    action = Tile(pref.title, Icons.list_rounded);
+    trailing = [
+      IconButton(
+        icon: Icon(Icons.add_rounded),
+        onPressed: () => getInput('', 'Add').then((val) {
+          if (pref.value.contains(val)) return;
+          pref.set(pref.value..add(val));
+        }),
+      ),
+    ];
+    list = pref.value.map((e) {
+      return Tile('$e', Icons.highlight_off_rounded, '', () {
+        pref.set(pref.value..remove(e));
       });
     });
   }

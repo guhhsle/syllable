@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import '../template/functions.dart';
 import '../template/layer.dart';
 import '../template/tile.dart';
 import '../data.dart';
@@ -18,14 +16,7 @@ class CursorLayer extends Layer {
     list = [
       Tile.fromPref(Pref.exponential),
       Tile.fromPref(Pref.cursorShift),
-      Tile('Syllables', Icons.crop_16_9_rounded, initSyllables, () async {
-        final input = await getInput(syllables, 'Syllables');
-        List<String> next = [];
-        for (int i = 0; i < input.length; i++) {
-          next.add(input[i]);
-        }
-        Pref.syllables.set(next);
-      }),
+      Tile.fromListPref(Pref.syllables),
     ];
   }
 }

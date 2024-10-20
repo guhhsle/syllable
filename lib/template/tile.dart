@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'functions.dart';
+import 'prefs.dart';
 import '../data.dart';
 
 class Tile {
@@ -8,7 +9,7 @@ class Tile {
   void Function()? onTap;
   dynamic title, trailing;
   Color? iconColor;
-  IconData icon;
+  IconData icon = Icons.moped_rounded;
 
   Tile([
     this.title = '',
@@ -77,5 +78,11 @@ class Tile {
       '$prefix${t(pref.value)}$suffix',
       onTap,
     );
+  }
+
+  static Tile fromListPref(Pref<List<String>> pref) {
+    return Tile(pref.title, pref.icon ?? Icons.moped_rounded, '', () {
+      PrefAsList(pref).show();
+    });
   }
 }
