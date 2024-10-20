@@ -12,7 +12,8 @@ const locales = [
 ];
 const tops = ['Primary', 'Black', 'Transparent'];
 const initBreakpoints = ['(', ')', '-', '.', ',', '!', '?', ':', ';'];
-const initSyllables = ['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U', ''];
+//removed '' from syllables, needs testing
+const initSyllables = ['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U'];
 const aligns = ['Left', 'Right', 'Center', 'Justify', 'Start', 'End'];
 const shifts = ['Syllable', '2 Syllables', '1', '2', '5'];
 

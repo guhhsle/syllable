@@ -81,13 +81,13 @@ class PrefAsList extends Layer {
         icon: Icon(Icons.add_rounded),
         onPressed: () => getInput('', 'Add').then((val) {
           if (pref.value.contains(val)) return;
-          pref.set(pref.value..add(val));
+          pref.set(pref.value.toList()..add(val));
         }),
       ),
     ];
     list = pref.value.map((e) {
       return Tile('$e', Icons.highlight_off_rounded, '', () {
-        pref.set(pref.value..remove(e));
+        pref.set(pref.value.toList()..remove(e));
       });
     });
   }
