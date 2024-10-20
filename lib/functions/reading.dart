@@ -10,8 +10,6 @@ List<int> d = [0, 0, 0, 0];
 Future nextSyllable() async {
   d = dots.value.toList();
   clearing = true;
-  if (d[0] > Pref.clearTreshold.value) await clearThreshold(false);
-
   if (text.length - d[3] < Pref.preload.value) {
     int currentEnd = position + text.length;
     int? nextEnd = currentEnd + Pref.preload.value;
@@ -78,7 +76,7 @@ Future animateOffset(int j, int inc) async {
   }
 }
 
-Future clearThreshold(bool auto) async {
+Future clearThreshold() async {
   clearing = true;
   RenderBox ts = textKey.currentContext?.findRenderObject() as RenderBox;
   double charWidth = ts.size.width / 9;

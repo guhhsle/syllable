@@ -12,9 +12,9 @@ dependencies:
 
   html: any
   flashy_flushbar: any
-  archive: any
+  archive: ^3.6.1
   shared_preferences: any
-  file_picker: any
+  file_picker: ^8.1.3
     #syncfusion_flutter_pdf: any
 
 dev_dependencies:

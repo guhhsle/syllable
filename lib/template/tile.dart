@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'data.dart';
 import 'functions.dart';
 import '../data.dart';
 
@@ -10,7 +9,6 @@ class Tile {
   dynamic title, trailing;
   Color? iconColor;
   IconData icon;
-  BuildContext dirtyContext = navigatorKey.currentContext!;
 
   Tile([
     this.title = '',
@@ -28,14 +26,6 @@ class Tile {
     this.onHold,
     this.iconColor,
   });
-
-  BuildContext get context {
-    if (dirtyContext.mounted) {
-      return dirtyContext;
-    } else {
-      return navigatorKey.currentContext!;
-    }
-  }
 
   Widget get toWidget {
     Widget? lead, trail;
@@ -83,7 +73,7 @@ class Tile {
     suffix = t(suffix);
     return Tile(
       pref.title,
-      pref.icon,
+      pref.icon ?? Icons.moped_rounded,
       '$prefix${t(pref.value)}$suffix',
       onTap,
     );

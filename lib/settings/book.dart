@@ -17,10 +17,6 @@ class BookLayer extends Layer {
       addBook();
     });
     list = [
-      Tile.fromPref(Pref.autoclear),
-      Tile.fromPref(Pref.clearTreshold, onPrefInput: (i) {
-        Pref.clearTreshold.set(int.parse(i).clamp(0, double.infinity).toInt());
-      }),
       Tile.fromPref(Pref.preload, onPrefInput: (i) {
         Pref.preload.set(int.parse(i).clamp(0, double.infinity).toInt());
       }),

@@ -54,10 +54,8 @@ class _HomeState extends State<Home> {
           ],
           child: GestureDetector(
             onPanEnd: (details) async {
-              if (!Pref.autoclear.value) return;
               d = snap.toList();
-              await clearThreshold(true);
-              dots.value = d.toList();
+              await clearThreshold();
             },
             onPanUpdate: (d) async {
               if (!clearing) {
