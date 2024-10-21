@@ -14,7 +14,7 @@ class Book extends ChangeNotifier {
 
   int length = 0;
   bool clearing = false;
-  int position = Pref.preload.value;
+  final position = ValueNotifier(0);
 
   List<int> dots = [0, 0, 0, 0];
   String _loadedText = '';
@@ -29,7 +29,7 @@ class Book extends ChangeNotifier {
   Future nextSyllable() async {
     clearing = true;
     if (loadedTextLength - dots[3] < Pref.preload.value) {
-      int currentEnd = position + loadedTextLength;
+      int currentEnd = position.value + loadedTextLength;
       int? nextEnd = currentEnd + Pref.preload.value;
       if (nextEnd > length) nextEnd = null;
       loadedText += Pref.book.value.substring(currentEnd, nextEnd);
@@ -65,7 +65,7 @@ class Book extends ChangeNotifier {
 
   Future<void> expandBehind() async {
     int offset = 16;
-    Pref.position.set(position + dots[1]);
+    Pref.position.set(position.value + dots[1]);
     final int load = Pref.preload.value ~/ 5;
     while (offset < load && !loadedText[dots[3] + offset].endsSentence) {
       offset++;
@@ -77,7 +77,7 @@ class Book extends ChangeNotifier {
   }
 
   Future animateOffset(int j, int inc) async {
-    if (Pref.animations.value) {
+    if (Pref.animation.value > 0) {
       const div = 10;
       int step = (inc / div).floor();
       for (int i = 0; i < div; i++) {
@@ -93,7 +93,7 @@ class Book extends ChangeNotifier {
     }
   }
 
-  Future clearThreshold() async {
+  Future clear() async {
     clearing = true;
     RenderBox ts = textKey.currentContext?.findRenderObject() as RenderBox;
     double charWidth = ts.size.width / 9;
@@ -114,18 +114,18 @@ class Book extends ChangeNotifier {
       for (int j = 0; j < dots.length; j++) {
         dots[j] -= i;
       }
-      if (Pref.animations.value) {
+      if (Pref.animation.value > 0) {
         notifyListeners();
-        await Future.delayed(Duration(milliseconds: i < row / 2 ? 10 : 15));
+        await Future.delayed(Duration(milliseconds: Pref.animation.value));
       }
     }
-    position = Pref.book.value.indexOf(loadedText.substring(0, dots[3]));
+    position.value = Pref.book.value.indexOf(loadedText.substring(0, dots[3]));
     notifyListeners();
     clearing = false;
   }
 
   void jumpTo(int i) {
-    position = i;
+    position.value = i;
     int end = i + Pref.preload.value;
     length = Pref.book.value.length;
     if (end > length) end = length;

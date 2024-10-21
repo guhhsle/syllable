@@ -7,9 +7,11 @@ class InterfaceLayer extends Layer {
   void construct() {
     action = Tile.fromPref(Pref.appbar);
     list = [
-      Tile.fromPref(Pref.animations),
+      Tile.fromPref(Pref.animation, suffix: 'ms', onPrefInput: (i) {
+        Pref.animation.set(int.parse(i).clamp(0, 1000));
+      }),
       Tile.fromPref(Pref.fontSize, onPrefInput: (i) {
-        Pref.fontSize.set(int.parse(i).clamp(0, double.infinity).toInt());
+        Pref.fontSize.set(int.parse(i).clamp(0, 1000));
       }),
       Tile.fromPref(Pref.fontBold),
       Tile.fromPref(Pref.fontAlign),
