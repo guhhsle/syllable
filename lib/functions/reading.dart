@@ -116,7 +116,7 @@ class Book extends ChangeNotifier {
       }
       if (Pref.animations.value) {
         notifyListeners();
-        await Future.delayed(Duration(milliseconds: i < row / 2 ? 15 : 30));
+        await Future.delayed(Duration(milliseconds: i < row / 2 ? 10 : 15));
       }
     }
     position = Pref.book.value.indexOf(loadedText.substring(0, dots[3]));
