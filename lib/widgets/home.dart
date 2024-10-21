@@ -66,10 +66,8 @@ class _HomeState extends State<Home> {
                 distance -= 1000;
               }
             },
-            child: Container(
+            child: Padding(
               padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-              width: double.infinity,
-              height: double.infinity,
               child: Center(
                 child: RichText(
                   textAlign: TextAlign.values.byName(

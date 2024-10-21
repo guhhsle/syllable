@@ -3,7 +3,7 @@ import '../template/data.dart';
 import '../data.dart';
 
 extension VisualFormatting on String {
-  bool get endsSentece => Pref.breakpoints.value.contains(this);
+  bool get endsSentence => Pref.breakpoints.value.contains(this);
   bool get splitsWord => contains(RegExp(r'(\s+)|(?=[.,;!?]) -—'));
 }
 
@@ -67,7 +67,7 @@ class Book extends ChangeNotifier {
     int offset = 16;
     Pref.position.set(position + dots[1]);
     final int load = Pref.preload.value ~/ 5;
-    while (offset < load && !loadedText[dots[3] + offset].endsSentece) {
+    while (offset < load && !loadedText[dots[3] + offset].endsSentence) {
       offset++;
     }
     offset++;
@@ -78,7 +78,7 @@ class Book extends ChangeNotifier {
 
   Future animateOffset(int j, int inc) async {
     if (Pref.animations.value) {
-      const int div = 10;
+      const div = 10;
       int step = (inc / div).floor();
       for (int i = 0; i < div; i++) {
         dots[j] += step;
@@ -116,7 +116,7 @@ class Book extends ChangeNotifier {
       }
       if (Pref.animations.value) {
         notifyListeners();
-        await Future.delayed(const Duration(milliseconds: 20));
+        await Future.delayed(Duration(milliseconds: i < row / 2 ? 15 : 30));
       }
     }
     position = Pref.book.value.indexOf(loadedText.substring(0, dots[3]));
