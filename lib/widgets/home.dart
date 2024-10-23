@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'frame.dart';
 import '../template/functions.dart';
-import '../functions/reading.dart';
 import '../template/settings.dart';
+import '../book/cursor.dart';
+import '../book/clear.dart';
+import '../book/book.dart';
 import '../data.dart';
 
 class Home extends StatelessWidget {
@@ -59,7 +61,7 @@ class Home extends StatelessWidget {
             distance += d.delta.distance * Pref.intensity.value;
           }
           while (distance > 1000) {
-            await Book().nextSyllable();
+            await Book().moveCursor();
             distance -= 1000;
           }
         },

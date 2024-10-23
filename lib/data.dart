@@ -3,6 +3,7 @@ import 'settings/interface.dart';
 import 'template/prefs.dart';
 import 'template/theme.dart';
 import 'template/tile.dart';
+import 'settings/lag.dart';
 import '../settings/cursor.dart';
 import '../settings/book.dart';
 
@@ -15,7 +16,7 @@ const initBreakpoints = ['(', ')', '-', '.', ',', '!', '?', ':', ';'];
 //removed '' from syllables, needs testing
 const initSyllables = ['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U'];
 const aligns = ['Left', 'Right', 'Center', 'Justify', 'Start', 'End'];
-const shifts = ['Syllable', '2 Syllables', '1', '2', '5'];
+const shifts = ['Syllable', '2 Syllables', 'Word', '1', '2', '5'];
 
 enum Pref<T> {
   font('Font', 'JetBrainsMono', Icons.format_italic_rounded, ui: true),

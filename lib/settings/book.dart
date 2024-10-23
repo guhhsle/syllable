@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../functions/add_book.dart';
-import '../functions/reading.dart';
+import '../book/generate.dart';
 import '../template/layer.dart';
 import '../template/tile.dart';
+import '../book/clear.dart';
+import '../book/book.dart';
 import '../data.dart';
 
 class BookLayer extends Layer {
@@ -10,7 +11,7 @@ class BookLayer extends Layer {
   construct() {
     action = Tile('Open file', Icons.book_rounded, '', () {
       Navigator.of(context).pop();
-      addBook();
+      Book().generate();
     });
     list = [
       Tile.fromPref(Pref.preload, onPrefInput: (i) {
@@ -19,14 +20,5 @@ class BookLayer extends Layer {
       }),
       Tile.fromListPref(Pref.breakpoints),
     ];
-  }
-}
-
-class LagLayer extends Layer {
-  @override
-  void construct() {
-    scroll = true;
-    action = Tile('Newest first');
-    list = Book().lags.reversed.map((lag) => Tile('$lag  ms'));
   }
 }
