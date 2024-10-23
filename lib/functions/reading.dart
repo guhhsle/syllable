@@ -87,13 +87,13 @@ class Book extends ChangeNotifier {
 
     needsClearing = true;
     clearRowIfNeeded();
-    Pref.position.set(position);
   }
 
   Future clearRowIfNeeded({DateTime? builtOn}) async {
     if (dots[0] < columns * 2) {
       needsClearing = false;
       clearing = false;
+      Pref.position.set(position);
     } else if (!clearing && needsClearing) {
       clearing = true;
       Duration timePassed = Duration.zero;
