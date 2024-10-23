@@ -20,9 +20,10 @@ class Home extends StatelessWidget {
       null,
     ];
     return Frame(
-      title: ValueListenableBuilder(
-          valueListenable: Book().position,
-          builder: (context, pos, child) {
+      title: ListenableBuilder(
+          listenable: Book(),
+          builder: (context, child) {
+            int pos = Book().position;
             bool addZero = pos / Book().length < 0.1;
             String percent =
                 '${(pos * 100 / Book().length).toStringAsFixed(2)} %';

@@ -13,9 +13,8 @@ class Book extends ChangeNotifier {
   factory Book() => instance;
   Book.internal();
 
-  int length = 0;
+  int length = 0, position = 0;
   bool clearing = false;
-  final position = ValueNotifier(0);
 
   List<int> dots = [0, 0, 0, 0];
   String _loadedText = '';
@@ -28,6 +27,7 @@ class Book extends ChangeNotifier {
   String get loadedText => _loadedText;
 
   Future nextSyllable() async {
+    if (dots[2] >= loadedTextLength - 1) return;
     clearing = true;
     if (dots[2] >= dots[3]) await nextSentence();
     dots[1] = dots[2];
@@ -69,12 +69,35 @@ class Book extends ChangeNotifier {
     double charWidth = ts.size.width / 9;
     double devWidth = MediaQuery.of(navigatorKey.currentContext!).size.width;
     devWidth -= 16; //16 Padding
-    int row = devWidth ~/ charWidth;
-    int newPosition = position.value;
+    int columns = devWidth ~/ charWidth;
 
-    while (dots[0] > row * 2) {
+    var futures = <Future>[];
+
+    int offset = 0, row = 0;
+    while (offset + columns * 2 < dots[0]) {
       int i = 0;
-      while (i < row && loadedText[i] != '\n') {
+      while (i < columns && loadedText[offset + i] != '\n') {
+        i++;
+      }
+      while (i > 0 && !loadedText[offset + i].splitsWord) {
+        i--;
+      }
+      i++;
+      offset += i;
+      futures.add(clearRow(row++, columns));
+    }
+    await Future.wait(futures);
+    notifyListeners();
+    Pref.position.set(position);
+    clearing = false;
+  }
+
+  Future clearRow(int row, int columns) async {
+    await Future.delayed(Duration(milliseconds: Pref.animation.value * row));
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(Duration(milliseconds: Pref.animation.value * row));
+      int i = 0;
+      while (i < columns && loadedText[i] != '\n') {
         i++;
       }
       while (i > 0 && !loadedText[i].splitsWord) {
@@ -85,18 +108,10 @@ class Book extends ChangeNotifier {
       for (int j = 0; j < dots.length; j++) {
         dots[j] -= i;
       }
-      position.value += i;
+      position += i;
       loadMore();
-      if (Pref.animation.value > 0) {
-        notifyListeners();
-        await Future.delayed(Duration(milliseconds: Pref.animation.value));
-      }
-      newPosition += i;
-    }
-    position.value = newPosition;
-    Pref.position.set(position.value);
-    notifyListeners();
-    clearing = false;
+      notifyListeners();
+    });
   }
 
   Future animateOffset(int j, int inc) async {
@@ -107,9 +122,7 @@ class Book extends ChangeNotifier {
         dots[j] += step;
         if (dots[2] < dots[3]) {
           notifyListeners();
-          await Future.delayed(
-            Duration(milliseconds: Pref.animation.value ~/ 1.5),
-          );
+          await Future.delayed(Duration(milliseconds: Pref.animation.value));
         }
       }
       dots[j] += inc % div;
@@ -119,21 +132,22 @@ class Book extends ChangeNotifier {
   }
 
   void resetLoadedText() {
-    int? nextEnd = position.value + Pref.preload.value;
+    int? nextEnd = position + Pref.preload.value;
     if (nextEnd > length) nextEnd = null;
-    loadedText = Pref.book.value.substring(position.value, nextEnd);
+    loadedText = Pref.book.value.substring(position, nextEnd);
+    notifyListeners();
   }
 
   void loadMore() {
-    int currentEnd = position.value + loadedTextLength;
-    int? nextEnd = position.value + Pref.preload.value;
+    int currentEnd = position + loadedTextLength;
+    int? nextEnd = position + Pref.preload.value;
     if (nextEnd <= currentEnd) return;
     if (nextEnd > length) nextEnd = null;
     loadedText += Pref.book.value.substring(currentEnd, nextEnd);
   }
 
   void jumpTo(int i) {
-    position.value = i;
+    position = i;
     int end = i + Pref.preload.value;
     length = Pref.book.value.length;
     if (end > length) end = length;
