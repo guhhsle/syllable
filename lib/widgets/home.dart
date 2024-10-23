@@ -64,10 +64,12 @@ class Home extends StatelessWidget {
         },
         child: Padding(
           padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-          child: Center(
+          child: Align(
+            alignment: Alignment.topCenter,
             child: ListenableBuilder(
               listenable: Book(),
               builder: (context, child) => RichText(
+                overflow: TextOverflow.fade,
                 textAlign: TextAlign.values.byName(
                   Pref.fontAlign.value.toLowerCase(),
                 ),

@@ -5,6 +5,7 @@ import '../data.dart';
 extension VisualFormatting on String {
   bool get endsSentence => Pref.breakpoints.value.contains(this);
   bool get splitsWord => contains(RegExp(r'(\s+)|(?=[.,;!?]) -—'));
+  bool get isSyllable => Pref.syllables.value.contains(this);
 }
 
 class Book extends ChangeNotifier {
@@ -27,79 +28,49 @@ class Book extends ChangeNotifier {
   String get loadedText => _loadedText;
 
   Future nextSyllable() async {
+    if (dots[2] >= dots[3]) await nextSentence();
     clearing = true;
-    if (loadedTextLength - dots[3] < Pref.preload.value) {
-      int currentEnd = position.value + loadedTextLength;
-      int? nextEnd = currentEnd + Pref.preload.value;
-      if (nextEnd > length) nextEnd = null;
-      loadedText += Pref.book.value.substring(currentEnd, nextEnd);
+    dots[1] = dots[2];
+    dots[2] += 2;
+
+    if (Pref.cursorShift.value.contains('Syllable')) {
+      while (!loadedText[dots[2]].isSyllable && dots[2] <= dots[3]) {
+        dots[2]++;
+      }
     }
-    await moveCursor();
-    if (dots[2] >= dots[3]) await expandBehind();
+    if (Pref.cursorShift.value == '2 Syllables') {
+      dots[2] += 2;
+      while (!loadedText[dots[2]].isSyllable && dots[2] <= dots[3]) {
+        dots[2]++;
+      }
+    } else if (Pref.cursorShift.value == '1') {
+      dots[2]--;
+    } else if (Pref.cursorShift.value == '5') {
+      dots[2] += 3;
+    }
+    if (dots[2] > dots[3]) dots[2] = dots[3];
     notifyListeners();
     clearing = false;
   }
 
-  Future<void> moveCursor() async {
-    dots[1] = dots[2];
-    dots[2] += 2;
-    String shift = Pref.cursorShift.value;
-    if (shift.contains('Syllable')) {
-      while (!Pref.syllables.value.contains(loadedText[dots[2]])) {
-        if (dots[2] >= dots[3]) await expandBehind();
-        dots[2]++;
-      }
-    }
-    if (shift == '2 Syllables') {
-      dots[2] += 2;
-      while (!Pref.syllables.value.contains(loadedText[dots[2]])) {
-        if (dots[2] >= dots[3]) await expandBehind();
-        dots[2]++;
-      }
-    } else if (shift == '1') {
-      dots[2]--;
-    } else if (shift == '5') {
-      dots[2] += 3;
-    }
-  }
-
-  Future<void> expandBehind() async {
+  Future nextSentence() async {
     int offset = 16;
-    Pref.position.set(position.value + dots[1]);
-    final int load = Pref.preload.value ~/ 5;
-    while (offset < load && !loadedText[dots[3] + offset].endsSentence) {
+    while (dots[3] + offset + 1 < loadedTextLength) {
+      if (loadedText[dots[3] + offset].endsSentence) break;
       offset++;
     }
-    offset++;
     await animateOffset(3, offset);
-    dots[0] = dots[1] = dots[2];
-    await moveCursor();
-  }
-
-  Future animateOffset(int j, int inc) async {
-    if (Pref.animation.value > 0) {
-      const div = 10;
-      int step = (inc / div).floor();
-      for (int i = 0; i < div; i++) {
-        dots[j] += step;
-        if (dots[2] < dots[3]) {
-          notifyListeners();
-          await Future.delayed(const Duration(milliseconds: 2));
-        }
-      }
-      dots[j] += inc % div;
-    } else {
-      dots[j] += inc;
-    }
+    dots[0] = dots[1] = dots[2] += 2;
   }
 
   Future clear() async {
     clearing = true;
-    RenderBox ts = textKey.currentContext?.findRenderObject() as RenderBox;
+    final ts = textKey.currentContext?.findRenderObject() as RenderBox;
     double charWidth = ts.size.width / 9;
     double devWidth = MediaQuery.of(navigatorKey.currentContext!).size.width;
     devWidth -= 16; //16 Padding
     int row = devWidth ~/ charWidth;
+    int newPosition = position.value;
 
     while (dots[0] > row * 2) {
       int i = 0;
@@ -114,14 +85,51 @@ class Book extends ChangeNotifier {
       for (int j = 0; j < dots.length; j++) {
         dots[j] -= i;
       }
+      position.value += i;
+      loadMore();
       if (Pref.animation.value > 0) {
         notifyListeners();
         await Future.delayed(Duration(milliseconds: Pref.animation.value));
       }
+      newPosition += i;
     }
-    position.value = Pref.book.value.indexOf(loadedText.substring(0, dots[3]));
+    position.value = newPosition;
+    Pref.position.set(position.value);
     notifyListeners();
     clearing = false;
+  }
+
+  Future animateOffset(int j, int inc) async {
+    if (Pref.animation.value > 0) {
+      const int div = 10;
+      int step = (inc / div).floor();
+      for (int i = 0; i < div; i++) {
+        dots[j] += step;
+        if (dots[2] < dots[3]) {
+          notifyListeners();
+          await Future.delayed(
+            Duration(milliseconds: Pref.animation.value),
+          );
+        }
+      }
+      dots[j] += inc % div;
+    } else {
+      dots[j] += inc;
+    }
+  }
+
+  void resetLoadedText() {
+    int? nextEnd = position.value + Pref.preload.value;
+    if (nextEnd > length) nextEnd = null;
+    loadedText = Pref.book.value.substring(position.value, nextEnd);
+  }
+
+  void loadMore() {
+    int currentEnd = position.value + loadedTextLength;
+    int? nextEnd = position.value + Pref.preload.value;
+    if (nextEnd <= currentEnd) return;
+    if (nextEnd > length) nextEnd = null;
+    loadedText += Pref.book.value.substring(currentEnd, nextEnd);
   }
 
   void jumpTo(int i) {
