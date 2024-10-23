@@ -3,9 +3,11 @@ import 'cursor.dart';
 import '../data.dart';
 
 extension VisualFormatting on String {
+  bool get isMark => contains(RegExp(r'["""”“„‟' '‚‛`´»«›‹]'));
   bool get splitsWord => contains(RegExp(r'(\s+)|(?=[.,;!?]) -—'));
   bool get endsSentence => Pref.breakpoints.value.contains(this);
   bool get isSyllable => Pref.syllables.value.contains(this);
+  bool get isNormal => !splitsWord && !endsSentence && !isMark;
 }
 
 class Book extends ChangeNotifier {

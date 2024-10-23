@@ -70,7 +70,7 @@ enum Pref<T> {
 List<Tile> get settings {
   return [
     Tile('Interface', Icons.toggle_on, '', InterfaceLayer().show),
-    Tile('Cursor', Icons.toggle_on, '', CursorLayer().show),
+    Tile('Cursor', Icons.code_rounded, '', CursorLayer().show),
     Tile('Book', Icons.book_rounded, '', BookLayer().show),
     Tile('Primary', Icons.colorize_rounded, '', ThemeLayer(true).show),
     Tile('Background', Icons.tonality_rounded, '', ThemeLayer(false).show),
