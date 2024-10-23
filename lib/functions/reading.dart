@@ -106,25 +106,22 @@ class Book extends ChangeNotifier {
   }
 
   Future clearRow(int row, int columns) async {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(Duration(milliseconds: Pref.animation.value * row));
-      int i = 0;
-      while (i < columns && loadedText[i] != '\n') {
-        i++;
-      }
-      while (i > 0 && !loadedText[i].splitsWord) {
-        i--;
-      }
-      i++;
-      loadedText = loadedText.substring(i);
-      for (int j = 0; j < dots.length; j++) {
-        dots[j] -= i;
-      }
-      position += i;
-      loadMore();
-      notifyListeners();
-    });
     await Future.delayed(Duration(milliseconds: Pref.animation.value * row));
+    int i = 0;
+    while (i < columns && loadedText[i] != '\n') {
+      i++;
+    }
+    while (i > 0 && !loadedText[i].splitsWord) {
+      i--;
+    }
+    i++;
+    loadedText = loadedText.substring(i);
+    for (int j = 0; j < dots.length; j++) {
+      dots[j] -= i;
+    }
+    position += i;
+    loadMore();
+    notifyListeners();
   }
 
   Future animateOffset(int j, int inc) async {
