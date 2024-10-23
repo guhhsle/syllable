@@ -26,8 +26,17 @@ class Book extends ChangeNotifier {
 
   String get loadedText => _loadedText;
 
+  bool get valid {
+    for (int i = 1; i < 4; i++) {
+      if (dots[i] >= loadedTextLength - 1) return false;
+      if (dots[i] < dots[i - 1]) return false;
+    }
+    return true;
+  }
+
   Future nextSyllable() async {
-    if (dots[2] >= loadedTextLength - 1) return;
+    final backup = dots.toList();
+    if (!valid) return;
     clearing = true;
     if (dots[2] >= dots[3]) await nextSentence();
     dots[1] = dots[2];
@@ -49,6 +58,10 @@ class Book extends ChangeNotifier {
       dots[2] += 3;
     }
     if (dots[2] > dots[3]) dots[2] = dots[3];
+    if (!valid) {
+      dots = backup.toList();
+      print('BACKED UP');
+    }
     notifyListeners();
     clearing = false;
   }
@@ -93,7 +106,6 @@ class Book extends ChangeNotifier {
   }
 
   Future clearRow(int row, int columns) async {
-    await Future.delayed(Duration(milliseconds: Pref.animation.value * row));
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(Duration(milliseconds: Pref.animation.value * row));
       int i = 0;
@@ -112,6 +124,7 @@ class Book extends ChangeNotifier {
       loadMore();
       notifyListeners();
     });
+    await Future.delayed(Duration(milliseconds: Pref.animation.value * row));
   }
 
   Future animateOffset(int j, int inc) async {
