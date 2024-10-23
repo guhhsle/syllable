@@ -99,8 +99,7 @@ class Book extends ChangeNotifier {
       Duration timePassed = Duration.zero;
       if (builtOn != null) timePassed = DateTime.now().difference(builtOn);
       lags.add(timePassed.inMilliseconds);
-      if (lags.length > 10) lags.removeAt(0);
-      print(lags);
+      if (lags.length > 20) lags.removeAt(0);
       int waitFor = Pref.animation.value - timePassed.inMilliseconds;
       if (waitFor < 0) waitFor = 0;
       await Future.delayed(Duration(milliseconds: waitFor));

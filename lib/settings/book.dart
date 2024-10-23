@@ -7,7 +7,7 @@ import '../data.dart';
 
 class BookLayer extends Layer {
   @override
-  void construct() {
+  construct() {
     action = Tile('Open file', Icons.book_rounded, '', () {
       Navigator.of(context).pop();
       addBook();
@@ -19,5 +19,14 @@ class BookLayer extends Layer {
       }),
       Tile.fromListPref(Pref.breakpoints),
     ];
+  }
+}
+
+class LagLayer extends Layer {
+  @override
+  void construct() {
+    scroll = true;
+    action = Tile('Newest first');
+    list = Book().lags.reversed.map((lag) => Tile('$lag  ms'));
   }
 }

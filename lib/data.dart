@@ -73,6 +73,7 @@ List<Tile> get settings {
     Tile('Book', Icons.book_rounded, '', BookLayer().show),
     Tile('Primary', Icons.colorize_rounded, '', ThemeLayer(true).show),
     Tile('Background', Icons.tonality_rounded, '', ThemeLayer(false).show),
+    Tile('Lag tracker', Icons.track_changes_rounded, '', LagLayer().show),
   ];
 }
 
