@@ -28,8 +28,8 @@ class Book extends ChangeNotifier {
   String get loadedText => _loadedText;
 
   Future nextSyllable() async {
-    if (dots[2] >= dots[3]) await nextSentence();
     clearing = true;
+    if (dots[2] >= dots[3]) await nextSentence();
     dots[1] = dots[2];
     dots[2] += 2;
 
@@ -108,7 +108,7 @@ class Book extends ChangeNotifier {
         if (dots[2] < dots[3]) {
           notifyListeners();
           await Future.delayed(
-            Duration(milliseconds: Pref.animation.value),
+            Duration(milliseconds: Pref.animation.value ~/ 1.5),
           );
         }
       }
