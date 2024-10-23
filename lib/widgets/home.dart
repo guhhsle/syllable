@@ -52,7 +52,7 @@ class Home extends StatelessWidget {
       child: GestureDetector(
         onPanEnd: (details) => Book().clear(),
         onPanUpdate: (d) async {
-          if (Book().clearing) return;
+          if (Book().animating) return;
           if (Pref.exponential.value) {
             distance += d.delta.distanceSquared * Pref.intensity.value;
           } else {

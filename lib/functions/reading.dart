@@ -15,10 +15,13 @@ class Book extends ChangeNotifier {
 
   int length = 0, position = 0;
   bool needsClearing = false;
-  bool clearing = false;
+  bool clearing = false, jumping = false;
   int columns = 0;
 
-  List<int> dots = [0, 0, 0, 0];
+  bool get animating => clearing || jumping;
+
+  var dots = [0, 0, 0, 0];
+  var lags = [0];
   String _loadedText = '';
   int loadedTextLength = 0;
   void set loadedText(String text) {
@@ -39,7 +42,7 @@ class Book extends ChangeNotifier {
   Future nextSyllable() async {
     final backup = dots.toList();
     if (!valid) return;
-    clearing = true;
+    jumping = true;
     if (dots[2] >= dots[3]) await nextSentence();
     dots[1] = dots[2];
     dots[2] += 2;
@@ -61,8 +64,8 @@ class Book extends ChangeNotifier {
     }
     if (dots[2] > dots[3]) dots[2] = dots[3];
     if (!valid) dots = backup.toList();
+    jumping = false;
     notifyListeners();
-    clearing = false;
   }
 
   Future nextSentence() async {
@@ -76,7 +79,6 @@ class Book extends ChangeNotifier {
   }
 
   Future clear() async {
-    clearing = true;
     final ts = textKey.currentContext?.findRenderObject() as RenderBox;
     double charWidth = ts.size.width / 9;
     double devWidth = MediaQuery.of(navigatorKey.currentContext!).size.width;
@@ -85,24 +87,27 @@ class Book extends ChangeNotifier {
 
     needsClearing = true;
     clearRowIfNeeded();
-
-    notifyListeners();
     Pref.position.set(position);
-    clearing = false;
   }
 
   Future clearRowIfNeeded({DateTime? builtOn}) async {
-    if (clearing || !needsClearing) return;
-    Duration timePassed = Duration.zero;
-    if (builtOn != null) timePassed = DateTime.now().difference(builtOn);
-    clearing = true;
-    int waitFor = Pref.animation.value - timePassed.inMilliseconds;
-    if (waitFor < 0) waitFor = 0;
-    await Future.delayed(Duration(milliseconds: waitFor));
-    clearRow();
-    clearing = false;
-    if (dots[0] < columns * 2) needsClearing = false;
-    notifyListeners();
+    if (dots[0] < columns * 2) {
+      needsClearing = false;
+      clearing = false;
+    } else if (!clearing && needsClearing) {
+      clearing = true;
+      Duration timePassed = Duration.zero;
+      if (builtOn != null) timePassed = DateTime.now().difference(builtOn);
+      lags.add(timePassed.inMilliseconds);
+      if (lags.length > 10) lags.removeAt(0);
+      print(lags);
+      int waitFor = Pref.animation.value - timePassed.inMilliseconds;
+      if (waitFor < 0) waitFor = 0;
+      await Future.delayed(Duration(milliseconds: waitFor));
+      clearRow();
+      clearing = false;
+      notifyListeners();
+    }
   }
 
   void clearRow() {
