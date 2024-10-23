@@ -69,32 +69,40 @@ class Home extends StatelessWidget {
             alignment: Alignment.topCenter,
             child: ListenableBuilder(
               listenable: Book(),
-              builder: (context, child) => RichText(
-                overflow: TextOverflow.fade,
-                textAlign: TextAlign.values.byName(
-                  Pref.fontAlign.value.toLowerCase(),
-                ),
-                text: TextSpan(
-                  style: TextStyle(
-                    fontWeight: FontWeight.values[Pref.fontBold.value ? 8 : 0],
-                    color: cs.primary,
-                    fontSize: Pref.fontSize.value.toDouble(),
-                    fontFamily: 'JetBrainsMono',
+              builder: (context, child) {
+                final builtOn = DateTime.now();
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                  await Book().clearRowIfNeeded(builtOn: builtOn);
+                });
+
+                return RichText(
+                  overflow: TextOverflow.fade,
+                  textAlign: TextAlign.values.byName(
+                    Pref.fontAlign.value.toLowerCase(),
                   ),
-                  children: [
-                    for (int i = 0; i < 5; i++)
-                      TextSpan(
-                        text: Book().loadedText.substring(
-                            i == 0 ? 0 : Book().dots[i - 1],
-                            i == 4 ? null : Book().dots[i]),
-                        style: TextStyle(
-                          backgroundColor: highlights[i],
-                          color: i == 0 || i == 4 ? null : cs.surface,
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontWeight:
+                          FontWeight.values[Pref.fontBold.value ? 8 : 0],
+                      color: cs.primary,
+                      fontSize: Pref.fontSize.value.toDouble(),
+                      fontFamily: 'JetBrainsMono',
+                    ),
+                    children: [
+                      for (int i = 0; i < 5; i++)
+                        TextSpan(
+                          text: Book().loadedText.substring(
+                              i == 0 ? 0 : Book().dots[i - 1],
+                              i == 4 ? null : Book().dots[i]),
+                          style: TextStyle(
+                            backgroundColor: highlights[i],
+                            color: i == 0 || i == 4 ? null : cs.surface,
+                          ),
                         ),
-                      ),
-                  ],
-                ),
-              ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
         ),

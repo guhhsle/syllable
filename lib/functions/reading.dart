@@ -14,7 +14,9 @@ class Book extends ChangeNotifier {
   Book.internal();
 
   int length = 0, position = 0;
+  bool needsClearing = false;
   bool clearing = false;
+  int columns = 0;
 
   List<int> dots = [0, 0, 0, 0];
   String _loadedText = '';
@@ -58,10 +60,7 @@ class Book extends ChangeNotifier {
       dots[2] += 3;
     }
     if (dots[2] > dots[3]) dots[2] = dots[3];
-    if (!valid) {
-      dots = backup.toList();
-      print('BACKED UP');
-    }
+    if (!valid) dots = backup.toList();
     notifyListeners();
     clearing = false;
   }
@@ -82,31 +81,31 @@ class Book extends ChangeNotifier {
     double charWidth = ts.size.width / 9;
     double devWidth = MediaQuery.of(navigatorKey.currentContext!).size.width;
     devWidth -= 16; //16 Padding
-    int columns = devWidth ~/ charWidth;
+    columns = devWidth ~/ charWidth;
 
-    var futures = <Future>[];
+    needsClearing = true;
+    clearRowIfNeeded();
 
-    int offset = 0, row = 0;
-    while (offset + columns * 2 < dots[0]) {
-      int i = 0;
-      while (i < columns && loadedText[offset + i] != '\n') {
-        i++;
-      }
-      while (i > 0 && !loadedText[offset + i].splitsWord) {
-        i--;
-      }
-      i++;
-      offset += i;
-      futures.add(clearRow(row++, columns));
-    }
-    await Future.wait(futures);
     notifyListeners();
     Pref.position.set(position);
     clearing = false;
   }
 
-  Future clearRow(int row, int columns) async {
-    await Future.delayed(Duration(milliseconds: Pref.animation.value * row));
+  Future clearRowIfNeeded({DateTime? builtOn}) async {
+    if (clearing || !needsClearing) return;
+    Duration timePassed = Duration.zero;
+    if (builtOn != null) timePassed = DateTime.now().difference(builtOn);
+    clearing = true;
+    int waitFor = Pref.animation.value - timePassed.inMilliseconds;
+    if (waitFor < 0) waitFor = 0;
+    await Future.delayed(Duration(milliseconds: waitFor));
+    clearRow();
+    clearing = false;
+    if (dots[0] < columns * 2) needsClearing = false;
+    notifyListeners();
+  }
+
+  void clearRow() {
     int i = 0;
     while (i < columns && loadedText[i] != '\n') {
       i++;
@@ -121,7 +120,6 @@ class Book extends ChangeNotifier {
     }
     position += i;
     loadMore();
-    notifyListeners();
   }
 
   Future animateOffset(int j, int inc) async {
