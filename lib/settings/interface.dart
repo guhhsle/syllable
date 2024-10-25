@@ -8,7 +8,7 @@ class InterfaceLayer extends Layer {
     action = Tile.fromPref(Pref.appbar);
     list = [
       Tile.fromPref(Pref.animation, suffix: 'ms', onPrefInput: (i) {
-        Pref.animation.set(int.parse(i).clamp(0, 1000));
+        Pref.animation.set(int.parse(i).clamp(0, 10000));
       }),
       Tile.fromPref(Pref.fontSize, onPrefInput: (i) {
         Pref.fontSize.set(int.parse(i).clamp(0, 1000));

@@ -80,7 +80,7 @@ extension Cursor on Book {
       if (loadedText[dots[3] + offset].endsSentence) break;
       offset++;
     }
-    await animateOffset(3, offset);
+    await animateDotOffset(3, offset);
 
     dots[0] = dots[1] = dots[2] = oldSentenceEnd;
     skipSentenceStartToChar();

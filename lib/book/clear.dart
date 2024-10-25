@@ -1,64 +1,52 @@
-import 'package:flutter/material.dart';
+import 'visual.dart';
 import 'book.dart';
-import '../template/data.dart';
 import '../data.dart';
 
 extension Clear on Book {
-  Future clear() async {
-    final ts = textKey.currentContext?.findRenderObject() as RenderBox;
-    double charWidth = ts.size.width / 9;
-    double devWidth = MediaQuery.of(
-      navigatorKey.currentContext!,
-    ).size.width;
-    devWidth -= 16; //16 Padding
-    columns = devWidth ~/ charWidth;
-
-    needsClearing = true;
-    clearRowIfNeeded();
-  }
-
-  Future clearRowIfNeeded({DateTime? builtOn}) async {
-    if (!clearing && needsClearing) {
-      clearing = true;
-      Duration timePassed = Duration.zero;
-      if (builtOn != null) timePassed = DateTime.now().difference(builtOn);
-
-      lags.add(timePassed.inMilliseconds);
-      if (lags.length > 20) lags.removeAt(0);
-
-      int waitFor = Pref.animation.value - timePassed.inMilliseconds;
-      if (waitFor < 0) waitFor = 0;
-
-      await Future.delayed(Duration(milliseconds: waitFor));
-      clearRow();
-      clearing = false;
-      notify();
-    }
-  }
-
   void stopClearing() {
     needsClearing = false;
     clearing = false;
-    Pref.position.set(position);
   }
 
   void clearRow() {
     int i = 0;
-    while (i < columns && loadedText[i] != '\n') {
+    while (i < columns && loadedText[charOffset + i] != '\n') {
       i++;
     }
-    while (i > 0 && !loadedText[i].splitsWord) {
+    while (i > 0 && !loadedText[charOffset + i].splitsWord) {
       i--;
     }
-    //if (loadedText[i].isErasedOnEndl) i++;
     i++;
-    if (i > dots[0]) return stopClearing();
-    loadedText = loadedText.substring(i);
-    for (int j = 0; j < dots.length; j++) {
-      dots[j] -= i;
+    if (charOffset + i > dots[0]) return stopClearing();
+    charOffset += i;
+    visualLineOffset -= charHeight;
+  }
+
+  Future<void> clearRows() async {
+    animDuration = Pref.animation.value;
+    needsClearing = clearing = true;
+    loadVisualInfo();
+    while (needsClearing) {
+      clearRow();
     }
-    position += i;
-    loadMore();
+    loadMore(charOffset);
+    notify();
+    await Future.delayed(Duration(milliseconds: animDuration));
+    normaliseOffset();
+    notify();
+  }
+
+  void normaliseOffset() {
+    loadedText = loadedText.substring(charOffset);
+    visualLineOffset = 0;
+    animDuration = 0;
+    for (int j = 0; j < dots.length; j++) {
+      dots[j] -= charOffset;
+    }
+    position += charOffset;
+    Pref.position.set(position);
+    charOffset = 0;
+    if (loadedTextLength != Pref.preload.value) resetLoadedText();
   }
 
   void resetLoadedText() {
@@ -68,9 +56,9 @@ extension Clear on Book {
     notify();
   }
 
-  void loadMore() {
+  void loadMore(int addition) {
     int currentEnd = position + loadedTextLength;
-    int? nextEnd = position + Pref.preload.value;
+    int? nextEnd = currentEnd + addition;
     if (nextEnd <= currentEnd) return;
     if (nextEnd > length) nextEnd = null;
     loadedText += Pref.book.value.substring(currentEnd, nextEnd);

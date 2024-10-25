@@ -3,7 +3,6 @@ import 'settings/interface.dart';
 import 'template/prefs.dart';
 import 'template/theme.dart';
 import 'template/tile.dart';
-import 'settings/lag.dart';
 import '../settings/cursor.dart';
 import '../settings/book.dart';
 
@@ -27,7 +26,7 @@ enum Pref<T> {
   primaryDark('Dark primary', 'FEDBD0', Icons.colorize_rounded, ui: true),
   debug('Developer', false, Icons.developer_mode_rounded),
   //READING
-  animation('Animation duration', 10, Icons.animation_rounded),
+  animation('Animation duration', 1500, Icons.animation_rounded),
   preload('Preload', 2000, Icons.clear_all_rounded),
   breakpoints('Sentence breaks', initBreakpoints, Icons.crop_16_9_rounded),
   intensity('Intensity', 20, Icons.gesture_rounded),
@@ -73,8 +72,5 @@ List<Tile> get settings {
     Tile('Book', Icons.book_rounded, '', BookLayer().show),
     Tile('Primary', Icons.colorize_rounded, '', ThemeLayer(true).show),
     Tile('Background', Icons.tonality_rounded, '', ThemeLayer(false).show),
-    Tile('Lag tracker', Icons.track_changes_rounded, '', LagLayer().show),
   ];
 }
-
-final GlobalKey textKey = GlobalKey();

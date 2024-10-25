@@ -16,17 +16,18 @@ extension VisualFormatting on String {
 }
 
 class Book extends ChangeNotifier {
+  final key = GlobalKey();
   static final instance = Book.internal();
   factory Book() => instance;
   Book.internal();
 
+  bool clearing = false, jumping = false;
   int length = 0, position = 0;
   bool needsClearing = false;
-  bool clearing = false, jumping = false;
+  double charHeight = 0;
   int columns = 0;
 
   var dots = [0, 0, 0, 0];
-  var lags = [0];
   String _loadedText = '';
   int loadedTextLength = 0;
   void set loadedText(String text) {
@@ -36,6 +37,10 @@ class Book extends ChangeNotifier {
 
   bool get animating => clearing || jumping;
   String get loadedText => _loadedText;
+
+  double visualLineOffset = 0;
+  int lineOffset = 0, charOffset = 0;
+  int animDuration = 0;
 
   void notify() => instance.notifyListeners();
 
@@ -60,7 +65,7 @@ class Book extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future animateOffset(int j, int inc) async {
+  Future animateDotOffset(int j, int inc) async {
     if (Pref.animation.value > 0) {
       const int div = 10;
       int step = (inc / div).floor();
@@ -69,7 +74,7 @@ class Book extends ChangeNotifier {
         if (dots[2] < dots[3]) {
           notifyListeners();
           await Future.delayed(Duration(
-            milliseconds: Pref.animation.value,
+            milliseconds: Pref.animation.value ~/ 100,
           ));
         }
       }

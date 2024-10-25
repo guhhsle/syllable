@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../book/clear.dart';
 import '../book/book.dart';
 import '../data.dart';
 
@@ -29,34 +28,44 @@ class BookText extends StatelessWidget {
       Pref.fontAlign.value.toLowerCase(),
     );
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: ListenableBuilder(
+    return Stack(
+      children: [
+        ListenableBuilder(
           listenable: Book(),
           builder: (context, child) {
-            final builtOn = DateTime.now();
-            WidgetsBinding.instance.addPostFrameCallback(
-                (_) => Book().clearRowIfNeeded(builtOn: builtOn));
-
-            return RichText(
-              overflow: TextOverflow.fade,
-              textAlign: textAlign,
-              text: TextSpan(
-                style: font,
-                children: [
-                  TextSpan(text: text.substring(0, dots[0]), style: non),
-                  TextSpan(text: text.substring(dots[0], dots[1]), style: semi),
-                  TextSpan(text: text.substring(dots[1], dots[2]), style: full),
-                  TextSpan(text: text.substring(dots[2], dots[3]), style: semi),
-                  TextSpan(text: text.substring(dots[3]), style: non),
-                ],
+            return AnimatedPositioned(
+              duration: Duration(milliseconds: Book().animDuration),
+              curve: Curves.easeOutExpo,
+              top: Book().visualLineOffset,
+              child: Container(
+                padding: const EdgeInsets.only(left: 8, right: 8, top: 10),
+                width: MediaQuery.of(context).size.width,
+                child: RichText(
+                  overflow: TextOverflow.fade,
+                  textAlign: textAlign,
+                  text: TextSpan(
+                    style: font,
+                    children: [
+                      TextSpan(text: text.substring(0, dots[0]), style: non),
+                      TextSpan(
+                          text: text.substring(dots[0], dots[1]), style: semi),
+                      TextSpan(
+                          text: text.substring(dots[1], dots[2]), style: full),
+                      TextSpan(
+                          text: text.substring(dots[2], dots[3]), style: semi),
+                      TextSpan(text: text.substring(dots[3]), style: non),
+                    ],
+                  ),
+                ),
               ),
             );
           },
         ),
-      ),
+        Container(
+          height: 10,
+          color: cs.surface,
+        ),
+      ],
     );
   }
 }

@@ -22,7 +22,7 @@ class BookPosition extends StatelessWidget {
           ))),
           child: Text(
             ' ${addZero ? '0' : ''}$percent ',
-            key: textKey,
+            key: Book().key,
             style: TextStyle(
               fontSize: Pref.fontSize.value.toDouble(),
               fontWeight: FontWeight.values[Pref.fontBold.value ? 8 : 0],
