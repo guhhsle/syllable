@@ -18,11 +18,7 @@ extension Clear on Book {
   }
 
   Future clearRowIfNeeded({DateTime? builtOn}) async {
-    if (dots[0] < columns * 2) {
-      needsClearing = false;
-      clearing = false;
-      Pref.position.set(position);
-    } else if (!clearing && needsClearing) {
+    if (!clearing && needsClearing) {
       clearing = true;
       Duration timePassed = Duration.zero;
       if (builtOn != null) timePassed = DateTime.now().difference(builtOn);
@@ -40,6 +36,12 @@ extension Clear on Book {
     }
   }
 
+  void stopClearing() {
+    needsClearing = false;
+    clearing = false;
+    Pref.position.set(position);
+  }
+
   void clearRow() {
     int i = 0;
     while (i < columns && loadedText[i] != '\n') {
@@ -48,7 +50,9 @@ extension Clear on Book {
     while (i > 0 && !loadedText[i].splitsWord) {
       i--;
     }
+    //if (loadedText[i].isErasedOnEndl) i++;
     i++;
+    if (i > dots[0]) return stopClearing();
     loadedText = loadedText.substring(i);
     for (int j = 0; j < dots.length; j++) {
       dots[j] -= i;

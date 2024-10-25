@@ -4,8 +4,13 @@ import '../data.dart';
 
 extension VisualFormatting on String {
   bool get isMark => contains(RegExp(r'["""”“„‟' '‚‛`´»«›‹]'));
-  bool get splitsWord => contains(RegExp(r'(\s+)|(?=[.,;!?]) -—'));
-  bool get endsSentence => Pref.breakpoints.value.contains(this);
+  //bool get isErasedOnEndl => contains(RegExp(r'[ \t\n\r]'));
+  //Prosli RegExp(r'(\s+)|(?=[.,;!?]) -|—'));
+  //Mozda i sledece  ; -
+  bool get splitsWord =>
+      contains(RegExp(r'(\s+)|[-–—_/\\:\n\t\r|•…\[\]{}<>+=' ']'));
+  bool get endsSentence =>
+      Pref.breakpoints.value.contains(this) || this == '\n';
   bool get isSyllable => Pref.syllables.value.contains(this);
   bool get isNormal => !splitsWord && !endsSentence && !isMark;
 }

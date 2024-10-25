@@ -78,6 +78,10 @@ class PrefAsList extends Layer {
     action = Tile(pref.title, Icons.list_rounded);
     trailing = [
       IconButton(
+        icon: Icon(Icons.restart_alt_rounded),
+        onPressed: () => pref.set(pref.initial),
+      ),
+      IconButton(
         icon: Icon(Icons.add_rounded),
         onPressed: () => getInput('', 'Add').then((val) {
           if (pref.value.contains(val)) return;

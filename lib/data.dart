@@ -12,9 +12,8 @@ const locales = [
   ...['Polish', 'Portuguese', 'Russian', 'Slovenian', 'Japanese']
 ];
 const tops = ['Primary', 'Black', 'Transparent'];
-const initBreakpoints = ['(', ')', '-', '.', ',', '!', '?', ':', ';'];
-//removed '' from syllables, needs testing
 const initSyllables = ['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U'];
+const initBreakpoints = ['(', ')', '-', '.', ',', '!', '?', ':', ';'];
 const aligns = ['Left', 'Right', 'Center', 'Justify', 'Start', 'End'];
 const shifts = ['Syllable', '2 Syllables', 'Word', '1', '2', '5'];
 

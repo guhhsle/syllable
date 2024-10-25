@@ -72,11 +72,12 @@ class Tile {
     }
     prefix = t(prefix);
     suffix = t(suffix);
-    return Tile(
+    return Tile.complex(
       pref.title,
       pref.icon ?? Icons.moped_rounded,
       '$prefix${t(pref.value)}$suffix',
       onTap,
+      onHold: () => pref.set(pref.initial),
     );
   }
 
