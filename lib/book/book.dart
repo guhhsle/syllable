@@ -38,9 +38,10 @@ class Book extends ChangeNotifier {
   bool get animating => clearing || jumping;
   String get loadedText => _loadedText;
 
-  double visualLineOffset = 0;
   int lineOffset = 0, charOffset = 0;
   int animDuration = 0;
+
+  double get lineOffsetToVisual => -lineOffset * charHeight / 1;
 
   void notify() => instance.notifyListeners();
 
@@ -74,7 +75,7 @@ class Book extends ChangeNotifier {
         if (dots[2] < dots[3]) {
           notifyListeners();
           await Future.delayed(Duration(
-            milliseconds: Pref.animation.value ~/ 100,
+            milliseconds: Pref.animation.value ~/ 5,
           ));
         }
       }

@@ -26,7 +26,7 @@ enum Pref<T> {
   primaryDark('Dark primary', 'FEDBD0', Icons.colorize_rounded, ui: true),
   debug('Developer', false, Icons.developer_mode_rounded),
   //READING
-  animation('Animation duration', 1500, Icons.animation_rounded),
+  animation('Animation duration', 300, Icons.animation_rounded),
   preload('Preload', 2000, Icons.clear_all_rounded),
   breakpoints('Sentence breaks', initBreakpoints, Icons.crop_16_9_rounded),
   intensity('Intensity', 20, Icons.gesture_rounded),

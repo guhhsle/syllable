@@ -3,11 +3,6 @@ import 'book.dart';
 import '../data.dart';
 
 extension Clear on Book {
-  void stopClearing() {
-    needsClearing = false;
-    clearing = false;
-  }
-
   void clearRow() {
     int i = 0;
     while (i < columns && loadedText[charOffset + i] != '\n') {
@@ -17,28 +12,32 @@ extension Clear on Book {
       i--;
     }
     i++;
-    if (charOffset + i > dots[0]) return stopClearing();
+    if (charOffset + i > dots[0]) {
+      needsClearing = false;
+      return;
+    }
+    lineOffset++;
     charOffset += i;
-    visualLineOffset -= charHeight;
   }
 
   Future<void> clearRows() async {
-    animDuration = Pref.animation.value;
     needsClearing = clearing = true;
     loadVisualInfo();
     while (needsClearing) {
       clearRow();
     }
+    animDuration = Pref.animation.value * lineOffset;
     loadMore(charOffset);
     notify();
     await Future.delayed(Duration(milliseconds: animDuration));
     normaliseOffset();
+    clearing = false;
     notify();
   }
 
   void normaliseOffset() {
     loadedText = loadedText.substring(charOffset);
-    visualLineOffset = 0;
+    lineOffset = 0;
     animDuration = 0;
     for (int j = 0; j < dots.length; j++) {
       dots[j] -= charOffset;
