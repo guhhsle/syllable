@@ -20,13 +20,17 @@ extension Clear on Book {
     charOffset += i;
   }
 
+  void checkForClearing() {
+    if (needsClearing && !animating) clearRows();
+  }
+
   Future<void> clearRows() async {
     needsClearing = clearing = true;
     loadVisualInfo();
     while (needsClearing) {
       clearRow();
     }
-    animDuration = Pref.animation.value * lineOffset;
+    animDuration = Pref.clearAnimation.value * lineOffset;
     loadMore(charOffset);
     notify();
     await Future.delayed(Duration(milliseconds: animDuration));

@@ -1,5 +1,6 @@
-import '../data.dart';
+import 'clear.dart';
 import 'book.dart';
+import '../data.dart';
 
 extension Cursor on Book {
   Map<String, void Function()> get cursorMoves {
@@ -14,19 +15,23 @@ extension Cursor on Book {
   }
 
   Future moveCursor() async {
-    final backup = dots.toList();
     if (!valid) return;
+    final safePoint = dots.toList();
     jumping = true;
     if (dots[2] >= dots[3]) await nextSentence();
+    final somewhatSafePoint = dots.toList();
     dots[1] = dots[2];
 
     cursorMoves[Pref.cursorShift.value]!.call();
     skipCursorStartToChar();
 
     if (dots[2] > dots[3]) dots[2] = dots[3];
-    if (!valid) dots = backup.toList();
+    if (!valid) dots = somewhatSafePoint.toList();
+    if (!valid) dots = safePoint.toList();
+    await animateDots(safePoint, dots.toList());
     jumping = false;
     notify();
+    checkForClearing();
   }
 
   void skipCursorStartToChar() {
@@ -74,15 +79,12 @@ extension Cursor on Book {
   void moveCursorEndBy5() => dots[2] += 5;
 
   Future nextSentence() async {
-    int offset = 16; //Minimal sentence length
-    int oldSentenceEnd = dots[3];
-    while (dots[3] + offset + 1 < loadedTextLength) {
-      if (loadedText[dots[3] + offset].endsSentence) break;
-      offset++;
+    dots[0] = dots[1] = dots[2] = dots[3];
+    dots[3] += 16;
+    while (dots[3] + 1 < loadedTextLength) {
+      if (loadedText[dots[3]].endsSentence) break;
+      dots[3]++;
     }
-    await animateDotOffset(3, offset);
-
-    dots[0] = dots[1] = dots[2] = oldSentenceEnd;
     skipSentenceStartToChar();
   }
 }

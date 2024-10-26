@@ -14,6 +14,9 @@ class CursorLayer extends Layer {
       Pref.intensity.set(int.parse(i).clamp(0, double.infinity).toInt());
     });
     list = [
+      Tile.fromPref(Pref.cursorAnimation, suffix: 'ms', onPrefInput: (i) {
+        Pref.cursorAnimation.set(int.parse(i).clamp(0, 10000));
+      }),
       Tile.fromPref(Pref.exponential),
       Tile.fromPref(Pref.cursorShift),
       Tile.fromListPref(Pref.syllables),

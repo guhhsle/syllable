@@ -24,7 +24,10 @@ class Home extends StatelessWidget {
         ),
       ],
       child: GestureDetector(
-        onPanEnd: (d) => Book().clearRows(),
+        onPanEnd: (d) {
+          Book().needsClearing = true;
+          Book().checkForClearing();
+        },
         onPanUpdate: (d) async {
           if (Book().animating) return;
           if (Pref.exponential.value) {

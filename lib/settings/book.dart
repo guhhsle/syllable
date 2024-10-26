@@ -14,6 +14,9 @@ class BookLayer extends Layer {
       Book().generate();
     });
     list = [
+      Tile.fromPref(Pref.clearAnimation, suffix: 'ms', onPrefInput: (i) {
+        Pref.clearAnimation.set(int.parse(i).clamp(0, 10000));
+      }),
       Tile.fromPref(Pref.preload, onPrefInput: (i) {
         Pref.preload.set(int.parse(i).clamp(0, 10000));
         Book().resetLoadedText();

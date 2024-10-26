@@ -66,22 +66,26 @@ class Book extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future animateDotOffset(int j, int inc) async {
-    if (Pref.animation.value > 0) {
-      const int div = 10;
-      int step = (inc / div).floor();
-      for (int i = 0; i < div; i++) {
-        dots[j] += step;
-        if (dots[2] < dots[3]) {
-          notifyListeners();
-          await Future.delayed(Duration(
-            milliseconds: Pref.animation.value ~/ 5,
-          ));
-        }
+  Future animateDots(List<int> from, List<int> to) async {
+    dots = from.toList();
+    if (Pref.cursorAnimation.value > 0) {
+      while (true) {
+        if (to[0] > dots[0]) dots[0]++;
+        if (to[1] > dots[1]) dots[1]++;
+        if (to[2] > dots[2]) dots[2]++;
+        if (to[3] > dots[3]) dots[3]++;
+        notifyListeners();
+        await Future.delayed(Duration(
+          milliseconds: Pref.cursorAnimation.value,
+        ));
+        if (to[0] > dots[0]) continue;
+        if (to[1] > dots[1]) continue;
+        if (to[2] > dots[2]) continue;
+        if (to[3] > dots[3]) continue;
+        break;
       }
-      dots[j] += inc % div;
     } else {
-      dots[j] += inc;
+      dots = to.toList();
     }
   }
 }

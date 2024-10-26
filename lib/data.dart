@@ -26,7 +26,8 @@ enum Pref<T> {
   primaryDark('Dark primary', 'FEDBD0', Icons.colorize_rounded, ui: true),
   debug('Developer', false, Icons.developer_mode_rounded),
   //READING
-  animation('Animation duration', 100, Icons.animation_rounded),
+  clearAnimation('Clear animation', 60, Icons.animation_rounded),
+  cursorAnimation('Cursor animation', 5, Icons.animation_rounded),
   preload('Preload', 2000, Icons.clear_all_rounded),
   breakpoints('Sentence breaks', initBreakpoints, Icons.crop_16_9_rounded),
   intensity('Intensity', 20, Icons.gesture_rounded),
@@ -43,9 +44,9 @@ enum Pref<T> {
 
   final T initial;
   final List<T>? all;
-  final String? title;
+  final String? title; //Backend is null
   final IconData? icon;
-  final bool ui; //Changing it leads to UI rebuild
+  final bool ui;
 
   const Pref(this.title, this.initial, this.icon, {this.all, this.ui = false});
 
@@ -57,9 +58,7 @@ enum Pref<T> {
 
   Future next() => Preferences.next(this);
 
-  void nextByLayer({String suffix = ''}) {
-    NextByLayer(this, suffix: suffix).show();
-  }
+  void nextByLayer({suffix = ''}) => NextByLayer(this, suffix: suffix).show();
 
   @override
   String toString() => name;
