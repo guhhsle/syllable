@@ -57,7 +57,7 @@ class LibraryBook {
   }
 
   void delete() {
-    Preferences.prefs.remove(title);
+    Preferences.prefs.remove('$prefix$title');
     final index = Pref.books.value.indexOf(title);
     final books = Pref.books.value.toList()..removeAt(index);
     final positions = Pref.positions.value.toList()..removeAt(index);
