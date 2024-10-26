@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'settings/interface.dart';
+import 'settings/library.dart';
 import 'template/prefs.dart';
 import 'template/theme.dart';
 import 'template/tile.dart';
 import '../settings/cursor.dart';
-import '../settings/book.dart';
 
 const locales = [
   ...['Serbian', 'English', 'Spanish', 'German', 'French', 'Italian'],
@@ -38,8 +38,10 @@ enum Pref<T> {
   fontBold('Bold', true, Icons.format_bold_rounded, ui: true),
   fontAlign('Text align', 'Start', Icons.format_align_justify,
       ui: true, all: aligns),
-  position(null, 0, null),
-  book('Book', '>Settings >Book >Open', Icons.book_rounded),
+  //position(null, 0, null),
+  book('Book', '', null),
+  books('Books', <String>[], Icons.book_rounded),
+  positions('Positions', <String>[], null),
   ;
 
   final T initial;
@@ -68,7 +70,7 @@ List<Tile> get settings {
   return [
     Tile('Interface', Icons.toggle_on, '', InterfaceLayer().show),
     Tile('Cursor', Icons.code_rounded, '', CursorLayer().show),
-    Tile('Book', Icons.book_rounded, '', BookLayer().show),
+    Tile('Library', Icons.book_rounded, '', LibraryLayer().show),
     Tile('Primary', Icons.colorize_rounded, '', ThemeLayer(true).show),
     Tile('Background', Icons.tonality_rounded, '', ThemeLayer(false).show),
   ];

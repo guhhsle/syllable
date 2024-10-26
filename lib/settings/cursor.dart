@@ -20,6 +20,7 @@ class CursorLayer extends Layer {
       Tile.fromPref(Pref.exponential),
       Tile.fromPref(Pref.cursorShift),
       Tile.fromListPref(Pref.syllables),
+      Tile.fromListPref(Pref.breakpoints),
     ];
   }
 }

@@ -2,15 +2,14 @@ import 'package:file_picker/file_picker.dart';
 import 'package:archive/archive_io.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
+import 'library.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'book.dart';
 import '../template/functions.dart';
-import '../data.dart';
 
-extension Generate on Book {
+extension Generate on LibraryBook {
   Future generate() async {
-    String book = '';
+    String content = '';
     late final PlatformFile result;
 
     try {
@@ -56,8 +55,9 @@ extension Generate on Book {
           if (spine != null) {}
           for (var z in zips) {
             try {
-              book += parse(parse(z.content).body!.text).documentElement!.text;
-              book += '\n\n\n';
+              content +=
+                  parse(parse(z.content).body!.text).documentElement!.text;
+              content += '\n\n\n';
             } catch (e) {
               debugPrint('$e');
             }
@@ -69,11 +69,11 @@ extension Generate on Book {
 //TEXT
         try {
 //APP
-          book = utf8.decode(await File(result.path!).readAsBytes());
+          content = utf8.decode(await File(result.path!).readAsBytes());
         } catch (e) {
 //WEB
           try {
-            book = utf8.decode(result.bytes!);
+            content = utf8.decode(result.bytes!);
           } catch (e) {
             showSnack('$e', false);
           }
@@ -82,7 +82,10 @@ extension Generate on Book {
     } catch (e) {
       showSnack('$e', false);
     }
-    Pref.book.set(book);
-    jumpTo(0);
+    title = result.name;
+    setContent(content);
+    create();
+    setCurrent();
+    open();
   }
 }

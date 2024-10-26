@@ -1,3 +1,4 @@
+import 'library.dart';
 import 'visual.dart';
 import 'book.dart';
 import '../data.dart';
@@ -51,7 +52,7 @@ extension Clear on Book {
       dots[j] -= charOffset;
     }
     position += charOffset;
-    Pref.position.set(position);
+    LibraryBook.current.tryToSetPosition(position);
     charOffset = 0;
     if (loadedTextLength != Pref.preload.value) resetLoadedText();
   }
@@ -59,7 +60,7 @@ extension Clear on Book {
   void resetLoadedText() {
     int? nextEnd = position + Pref.preload.value;
     if (nextEnd > length) nextEnd = null;
-    loadedText = Pref.book.value.substring(position, nextEnd);
+    loadedText = fullText.substring(position, nextEnd);
     notify();
   }
 
@@ -68,6 +69,6 @@ extension Clear on Book {
     int? nextEnd = currentEnd + addition;
     if (nextEnd <= currentEnd) return;
     if (nextEnd > length) nextEnd = null;
-    loadedText += Pref.book.value.substring(currentEnd, nextEnd);
+    loadedText += fullText.substring(currentEnd, nextEnd);
   }
 }

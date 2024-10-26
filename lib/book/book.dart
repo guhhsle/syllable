@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:syllable/book/library.dart';
 import 'cursor.dart';
 import '../data.dart';
 
@@ -28,7 +29,7 @@ class Book extends ChangeNotifier {
   int columns = 0;
 
   var dots = [0, 0, 0, 0];
-  String _loadedText = '';
+  String fullText = '', _loadedText = '';
   int loadedTextLength = 0;
   void set loadedText(String text) {
     _loadedText = text;
@@ -54,14 +55,13 @@ class Book extends ChangeNotifier {
   }
 
   Future jumpTo(int i) async {
-    length = Pref.book.value.length;
     assert(i >= 0);
     assert(i < length);
     position = i;
     int end = i + Pref.preload.value;
     if (end > length) end = length;
-    loadedText = Pref.book.value.substring(i, end);
-    Pref.position.set(i);
+    loadedText = fullText.substring(i, end);
+    LibraryBook.current.tryToSetPosition(i);
     dots = [0, 0, 0, 0];
     await moveCursor();
     dots[0] = dots[1] = 0;
