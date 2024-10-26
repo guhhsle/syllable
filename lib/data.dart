@@ -32,7 +32,7 @@ enum Pref<T> {
   breakpoints('Sentence breaks', initBreakpoints, Icons.crop_16_9_rounded),
   intensity('Intensity', 20, Icons.gesture_rounded),
   exponential('Exponential intensity', false, Icons.stacked_line_chart_rounded),
-  cursorShift('Cursor shift', 'Syllable', Icons.space_bar_rounded, all: shifts),
+  cursorShift('Cursor shift', 'Word', Icons.space_bar_rounded, all: shifts),
   syllables('Syllables', initSyllables, Icons.crop_16_9_rounded),
   fontSize('Font size', 16, Icons.format_size_rounded, ui: true),
   fontBold('Bold', true, Icons.format_bold_rounded, ui: true),

@@ -1,3 +1,2 @@
 String versions = '''
-	Brackets bug
 ''';

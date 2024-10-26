@@ -14,8 +14,8 @@ extension Cursor on Book {
     };
   }
 
-  Future moveCursor() async {
-    if (!valid) return;
+  Future<bool> moveCursor() async {
+    if (!valid) return false;
     final safePoint = dots.toList();
     jumping = true;
     if (dots[2] >= dots[3]) await nextSentence();
@@ -24,14 +24,22 @@ extension Cursor on Book {
 
     cursorMoves[Pref.cursorShift.value]!.call();
     skipCursorStartToChar();
-
     if (dots[2] > dots[3]) dots[2] = dots[3];
+    if (dots[1] == dots[2] || !loadedText[dots[1]].isNormal) {
+      if (dots[2] == dots[3]) {
+        if (dots[3] == loadedTextLength - 1) return false;
+        dots[3]++;
+      }
+      dots[2]++;
+      if (await moveCursor()) return true;
+    }
     if (!valid) dots = somewhatSafePoint.toList();
     if (!valid) dots = safePoint.toList();
     await animateDots(safePoint, dots.toList());
     jumping = false;
     notify();
     checkForClearing();
+    return true;
   }
 
   void skipCursorStartToChar() {

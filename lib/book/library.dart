@@ -36,10 +36,12 @@ class LibraryBook {
   String title;
   int position = 0, length = 0;
 
+  static const prefix = 'Book-';
+
   LibraryBook(this.title);
 
   void load() {
-    content = Preferences.prefs.getString(title)!;
+    content = Preferences.prefs.getString('$prefix$title')!;
     length = content.length;
     loadPosition();
   }
@@ -51,7 +53,7 @@ class LibraryBook {
 
   void save() {
     tryToSetPosition(position);
-    Preferences.prefs.setString(title, content);
+    Preferences.prefs.setString('$prefix$title', content);
   }
 
   void delete() {
