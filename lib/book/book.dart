@@ -54,9 +54,11 @@ class Book extends ChangeNotifier {
   }
 
   Future jumpTo(int i) async {
+    length = Pref.book.value.length;
+    assert(i >= 0);
+    assert(i < length);
     position = i;
     int end = i + Pref.preload.value;
-    length = Pref.book.value.length;
     if (end > length) end = length;
     loadedText = Pref.book.value.substring(i, end);
     Pref.position.set(i);
@@ -69,8 +71,10 @@ class Book extends ChangeNotifier {
   Future animateDots(List<int> from, List<int> to) async {
     dots = from.toList();
     if (Pref.cursorAnimation.value > 0) {
+      final longerTail = to[0] - from[0] > to[3] - from[3];
       while (true) {
         if (to[0] > dots[0]) dots[0]++;
+        if (to[0] > dots[0] && longerTail && dots[0] < dots[1]) dots[0]++;
         if (to[1] > dots[1]) dots[1]++;
         if (to[2] > dots[2]) dots[2]++;
         if (to[3] > dots[3]) dots[3]++;

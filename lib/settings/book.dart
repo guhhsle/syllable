@@ -18,7 +18,7 @@ class BookLayer extends Layer {
         Pref.clearAnimation.set(int.parse(i).clamp(0, 10000));
       }),
       Tile.fromPref(Pref.preload, onPrefInput: (i) {
-        Pref.preload.set(int.parse(i).clamp(0, 10000));
+        Pref.preload.set(int.parse(i).clamp(16, 10000));
         Book().resetLoadedText();
       }),
       Tile.fromListPref(Pref.breakpoints),

@@ -7,6 +7,10 @@ extension Clear on Book {
     int i = 0;
     while (i < columns && loadedText[charOffset + i] != '\n') {
       i++;
+      if (charOffset + i >= loadedTextLength) {
+        needsClearing = false;
+        return;
+      }
     }
     while (i > 0 && !loadedText[charOffset + i].splitsWord) {
       i--;

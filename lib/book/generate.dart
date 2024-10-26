@@ -2,8 +2,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:archive/archive_io.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
-//import 'package:syncfusion_flutter_pdf/pdf.dart';
-//import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'book.dart';
@@ -21,38 +19,45 @@ extension Generate on Book {
       if (result.name.endsWith('.pdf')) {
         showSnack('Convert PDF to text', true);
         /*
-      File file = File.fromUri(Uri.file(result.path!));
-      final ByteData byteData = ByteData.view(await file.readAsBytesSync().buffer);
-
-      List<int> data = await byteData.buffer.asUint8List(
-        byteData.offsetInBytes,
-        byteData.lengthInBytes,
-      );
-
-      PdfDocument document = PdfDocument(inputBytes: data);
-      book = PdfTextExtractor(document).extractText();
-
-      showSnack('Done', true);
-
-		*/
+					import 'package:syncfusion_flutter_pdf/pdf.dart';
+					import 'package:flutter/services.dart';
+					File file = File.fromUri(Uri.file(result.path!));
+					final ByteData byteData = ByteData.view(await file.readAsBytesSync().buffer);
+					List<int> data = await byteData.buffer.asUint8List(
+						byteData.offsetInBytes,
+						byteData.lengthInBytes,
+					);
+					PdfDocument document = PdfDocument(inputBytes: data);
+					book = PdfTextExtractor(document).extractText();
+				*/
       } else if (result.name.endsWith('.epub')) {
 //EPUB
         try {
+          ArchiveFile? spine;
           final inputStream = InputFileStream(result.path!);
           final archive = ZipDecoder().decodeBuffer(inputStream);
-          List<ArchiveFile> zipList = [];
-          for (var file in archive.files) {
-            if (file.isFile && file.name.endsWith('.html')) {
-              zipList.add(file);
-            }
+          final zips = archive.files.where((file) {
+            if (file.name.endsWith('.opf')) spine = file;
+            if (!file.isFile) return false;
+            if (file.name.endsWith('.html')) return true;
+            if (file.name.endsWith('.htm')) return true;
+            return false;
+          }).toList();
+          try {
+            final spineText = utf8.decode(spine!.content);
+            zips.sort((a, b) {
+              final indexA = spineText.indexOf(a.name);
+              final indexB = spineText.indexOf(b.name);
+              return indexA.compareTo(indexB);
+            });
+          } catch (e) {
+            zips.sort((a, b) => a.name.compareTo(b.name));
           }
-          zipList.sort((a, b) => a.name.compareTo(b.name));
-          for (var file in zipList) {
+          if (spine != null) {}
+          for (var z in zips) {
             try {
-              final String parsedString = parse(
-                parse(file.content).body!.text,
-              ).documentElement!.text;
-              book += '$parsedString\n\n\n';
+              book += parse(parse(z.content).body!.text).documentElement!.text;
+              book += '\n\n\n';
             } catch (e) {
               debugPrint('$e');
             }
