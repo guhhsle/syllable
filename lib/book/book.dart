@@ -53,8 +53,7 @@ class Book extends ChangeNotifier {
   }
 
   Future jumpTo(int i) async {
-    assert(i >= 0);
-    assert(i < length);
+    i = i.clamp(0, length - 1);
     position = i;
     int end = i + Pref.preload.value;
     if (end > length) end = length;

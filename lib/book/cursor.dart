@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
+
 import 'clear.dart';
 import 'book.dart';
 import '../data.dart';
 
 extension Cursor on Book {
-  Map<String, void Function()> get cursorMoves {
+  Map<String, void Function()> get moveCursorEnd {
     return {
       '2 Syllables': moveCursorEndBy2Syllables,
       'Syllable': moveCursorEndBySyllable,
@@ -14,28 +16,37 @@ extension Cursor on Book {
     };
   }
 
-  Future<bool> moveCursor() async {
-    if (!valid) return false;
-    final safePoint = dots.toList();
+  Future<bool> moveCursor({List<List<int>>? checkpoints}) async {
+    bool hasParent = checkpoints != null;
+    if (!valid && !hasParent) return false;
+    checkpoints ??= [];
+    checkpoints.add(dots.toList());
     jumping = true;
     if (dots[2] >= dots[3]) await nextSentence();
-    final somewhatSafePoint = dots.toList();
+    checkpoints.add(dots.toList());
     dots[1] = dots[2];
 
-    cursorMoves[Pref.cursorShift.value]!.call();
     skipCursorStartToChar();
+    moveCursorEnd[Pref.cursorShift.value]!.call();
+
     if (dots[2] > dots[3]) dots[2] = dots[3];
-    if (dots[1] == dots[2] || !loadedText[dots[1]].isNormal) {
-      if (dots[2] == dots[3]) {
-        if (dots[3] == loadedTextLength - 1) return false;
-        dots[3]++;
+    checkpoints.add(dots.toList());
+    if (!valid || !loadedText[dots[1]].isNormal) {
+      debugPrint('Special situation: $dots');
+      checkpoints.add(dots.toList());
+      if (!hasParent) {
+        if (await moveCursor(checkpoints: checkpoints)) return true;
       }
-      dots[2]++;
-      if (await moveCursor()) return true;
     }
-    if (!valid) dots = somewhatSafePoint.toList();
-    if (!valid) dots = safePoint.toList();
-    await animateDots(safePoint, dots.toList());
+    for (var checkpoint in checkpoints.reversed) {
+      if (valid) break;
+      dots = checkpoint.toList();
+    }
+    if (!valid) {
+      dots = checkpoints[0];
+      return false;
+    }
+    await animateDots(checkpoints[0], dots.toList());
     jumping = false;
     notify();
     checkForClearing();
