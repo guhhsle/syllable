@@ -38,7 +38,6 @@ enum Pref<T> {
   fontBold('Bold', true, Icons.format_bold_rounded, ui: true),
   fontAlign('Text align', 'Start', Icons.format_align_justify,
       ui: true, all: aligns),
-  //position(null, 0, null),
   book('Book', '', null),
   books('Books', <String>[], Icons.book_rounded),
   positions('Positions', <String>[], null),
