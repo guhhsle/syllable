@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:syllable/book/library.dart';
+import 'library.dart';
 import 'cursor.dart';
 import '../data.dart';
 
@@ -41,8 +41,6 @@ class Book extends ChangeNotifier {
 
   int lineOffset = 0, charOffset = 0;
   int animDuration = 0;
-
-  double get lineOffsetToVisual => -lineOffset * charHeight / 1;
 
   void notify() => instance.notifyListeners();
 

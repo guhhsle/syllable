@@ -5,27 +5,26 @@ import '../template/prefs.dart';
 import '../data.dart';
 
 class Library {
-  List<LibraryBook> books = [];
-
-  void fetchBooks() {
-    books = [];
+  List<LibraryBook> get books {
+    List<LibraryBook> list = [];
     for (var title in Pref.books.value) {
       try {
         final book = LibraryBook(title);
-        books.add(book..load());
+        list.add(book..load());
       } catch (e) {
         showSnack("Can't open $title", false);
         print('asd');
         debugPrint('$e');
       }
     }
+    list.sort((a, b) => a.title.compareTo(b.title));
+    return list;
   }
 
   void empty() {
     for (var book in books) {
       book.delete();
     }
-    books = [];
     Pref.books.set([]);
     Pref.positions.set([]);
     Pref.book.set('');
@@ -84,7 +83,10 @@ class LibraryBook {
     }
   }
 
-  void setCurrent() => Pref.book.set(title);
+  void openAsCurrent() {
+    Pref.book.set(title);
+    open();
+  }
 
   void open() {
     Book().fullText = content;
@@ -95,6 +97,13 @@ class LibraryBook {
   void setContent(String content) {
     this.content = content;
     length = content.length;
+  }
+
+  void rename(String name) {
+    delete();
+    title = name;
+    create();
+    openAsCurrent();
   }
 
   String get percentage {

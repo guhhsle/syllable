@@ -12,10 +12,8 @@ class LibraryLayer extends Layer {
   @override
   construct() {
     scroll = true;
-    library.fetchBooks();
-    action = Tile('Import', Icons.add_rounded, '', () async {
-      await LibraryBook('New').generate();
-      library.fetchBooks();
+    action = Tile('Import', Icons.add_rounded, '', () {
+      LibraryBook('New').generate();
     });
     trailing = [
       IconButton(
@@ -44,11 +42,14 @@ class LibraryBookLayer extends Layer {
   @override
   construct() {
     action = Tile('Open', Icons.keyboard_return_rounded, '', () {
-      book.setCurrent();
-      book.open();
+      book.openAsCurrent();
     });
+
     list = [
-      Tile(book.title, Icons.book_rounded),
+      Tile(book.title, Icons.edit_rounded, '', () async {
+        final newTitle = await getInput(book.title, 'Title');
+        book.rename(newTitle);
+      }),
       Tile(book.percentage, Icons.percent_rounded, 'At ${book.position}'),
       Tile('Delete', Icons.delete_forever_rounded, '', () {
         Navigator.of(context).pop();

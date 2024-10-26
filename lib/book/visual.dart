@@ -13,4 +13,6 @@ extension Visual on Book {
     devWidth -= 16; //16 Padding
     columns = devWidth ~/ charWidth;
   }
+
+  double get lineOffsetToVisual => -lineOffset * charHeight / 1;
 }
