@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:syllable/template/functions.dart';
+import '../template/functions.dart';
 import '../template/layer.dart';
 import '../book/generate.dart';
 import '../template/tile.dart';
@@ -11,7 +11,6 @@ class LibraryLayer extends Layer {
 
   @override
   construct() {
-    scroll = true;
     action = Tile('Import', Icons.add_rounded, '', () {
       LibraryBook('New').generate();
     });
