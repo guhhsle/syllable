@@ -12,7 +12,6 @@ class ThemeLayer extends Layer {
   ThemeLayer(this.primary);
   @override
   construct() {
-    scroll = true;
     action = Tile(
       ThemePref.themePref(primary, currentlyLight).value,
       primary ? Icons.colorize_rounded : Icons.tonality_rounded,
