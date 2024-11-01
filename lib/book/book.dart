@@ -4,19 +4,22 @@ import 'cursor.dart';
 import '../data.dart';
 
 extension VisualFormatting on String {
-  bool get isMark => contains(RegExp(r'["""”“„‟' '‚‛`´»«›‹]'));
-  //bool get isErasedOnEndl => contains(RegExp(r'[ \t\n\r]'));
-  //Prosli RegExp(r'(\s+)|(?=[.,;!?]) -|—'));
-  //Mozda i sledece  ; -
-  bool get splitsWord =>
-      contains(RegExp(r'(\s+)|[-–—_/\\:\n\t\r|•…\[\]{}<>+=' ']'));
-  bool get endsSentence =>
-      Pref.breakpoints.value.contains(this) || this == '\n';
   bool get isSyllable => Pref.syllables.value.contains(this);
   bool get isNormal => !splitsWord && !endsSentence && !isMark;
+  bool get isMark => contains(RegExp(r'["""”“„‟' '‚‛`´»«›‹]'));
+  //bool get isErasedOnEndl => contains(RegExp(r'[ \t\n\r]'));
+  //Previous RegExp(r'(\s+)|(?=[.,;!?]) -|—'));
+  //Maybe even these:  ; -
+  bool get splitsWord {
+    return contains(RegExp(r'(\s+)|[-–—_/\\:\n\t\r|•…\[\]{}<>+=' ']'));
+  }
+
+  bool get endsSentence {
+    return Pref.breakpoints.value.contains(this) || this == '\n';
+  }
 }
 
-class Book extends ChangeNotifier {
+class Book with ChangeNotifier {
   final key = GlobalKey();
   static final instance = Book.internal();
   factory Book() => instance;
@@ -68,12 +71,12 @@ class Book extends ChangeNotifier {
   Future animateDots(List<int> from, List<int> to) async {
     dots = from.toList();
     if (Pref.cursorAnimation.value > 0) {
-      final longerTail = to[0] - from[0] > to[3] - from[3];
       while (true) {
         if (to[0] > dots[0]) dots[0]++;
-        if (to[0] > dots[0] && longerTail && dots[0] < dots[1]) dots[0]++;
+        if (to[0] > dots[0] && dots[0] < dots[1]) dots[0]++;
         if (to[1] > dots[1]) dots[1]++;
         if (to[2] > dots[2]) dots[2]++;
+        if (to[3] > dots[3]) dots[3]++;
         if (to[3] > dots[3]) dots[3]++;
         notifyListeners();
         await Future.delayed(Duration(

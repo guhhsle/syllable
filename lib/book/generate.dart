@@ -85,6 +85,6 @@ extension Generate on LibraryBook {
     title = result.name;
     setContent(content);
     create();
-    openAsCurrent();
+    open();
   }
 }

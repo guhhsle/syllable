@@ -32,8 +32,7 @@ class Library {
 }
 
 class LibraryBook {
-  String content = '';
-  String title;
+  String content = '', title;
   int position = 0, length = 0;
 
   static const prefix = 'Book-';
@@ -85,12 +84,8 @@ class LibraryBook {
     }
   }
 
-  void openAsCurrent() {
-    Pref.book.set(title);
-    open();
-  }
-
   void open() {
+    Pref.book.set(title);
     Book().fullText = content;
     Book().length = length;
     Book().jumpTo(position);
@@ -103,14 +98,16 @@ class LibraryBook {
 
   void rename(String name) {
     delete();
+    if (title == Pref.book.value) {
+      Pref.book.set(name);
+    }
     title = name;
     create();
-    openAsCurrent();
   }
 
   String get percentage {
     loadPosition();
-    return '${(position * 100 / Book().length).toStringAsFixed(2)} %';
+    return '${(position * 100 / length).toStringAsFixed(2)} %';
   }
 
   String get formatTitle {

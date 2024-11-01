@@ -1,8 +1,7 @@
-import 'package:syllable/book/clear.dart';
-
-import '../book/book.dart';
 import '../template/layer.dart';
 import '../template/tile.dart';
+import '../book/clear.dart';
+import '../book/book.dart';
 import '../data.dart';
 
 class InterfaceLayer extends Layer {

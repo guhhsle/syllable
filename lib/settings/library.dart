@@ -40,10 +40,7 @@ class LibraryBookLayer extends Layer {
   LibraryBookLayer(this.book);
   @override
   construct() {
-    action = Tile('Open', Icons.keyboard_return_rounded, '', () {
-      book.openAsCurrent();
-    });
-
+    action = Tile('Open', Icons.keyboard_return_rounded, '', book.open);
     list = [
       Tile(book.title, Icons.edit_rounded, '', () async {
         final newTitle = await getInput(book.title, 'Title');
