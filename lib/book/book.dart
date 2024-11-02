@@ -70,13 +70,15 @@ class Book with ChangeNotifier {
 
   Future animateDots(List<int> from, List<int> to) async {
     dots = from.toList();
+    bool shiftWord = true;
     if (Pref.cursorAnimation.value > 0) {
       while (true) {
-        if (to[0] > dots[0]) dots[0]++;
         if (to[0] > dots[0] && dots[0] < dots[1]) dots[0]++;
-        if (to[1] > dots[1]) dots[1]++;
-        if (to[2] > dots[2]) dots[2]++;
-        if (to[3] > dots[3]) dots[3]++;
+        if (shiftWord) {
+          if (to[1] > dots[1]) dots[1]++;
+          if (to[2] > dots[2]) dots[2]++;
+        }
+        shiftWord = !shiftWord;
         if (to[3] > dots[3]) dots[3]++;
         notifyListeners();
         await Future.delayed(Duration(
