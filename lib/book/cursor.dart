@@ -18,40 +18,48 @@ extension Cursor on Book {
   }
 
   Future<bool> moveCursor({List<List<int>>? checkpoints}) async {
-    bool hasParent = checkpoints != null;
-    if (!valid && !hasParent) return false;
+    if (!valid && (checkpoints?.length ?? 6000) > 5000) return false;
     checkpoints ??= [];
     checkpoints.add(dots.toList());
-    jumping = true;
-    if (dots[2] >= dots[3]) await nextSentence();
-    checkpoints.add(dots.toList());
-    dots[1] = dots[2];
-
-    skipCursorStartToChar();
-    moveCursorEnd[Pref.cursorShift.value]!.call();
-
-    if (dots[2] > dots[3]) dots[2] = dots[3];
-    checkpoints.add(dots.toList());
-    if (!valid || !loadedText[dots[1]].isNormal) {
-      debugPrint('Special situation: $dots');
+    try {
+      jumping = true;
+      if (dots[2] >= dots[3]) await nextSentence();
       checkpoints.add(dots.toList());
-      if (!hasParent) {
-        if (await moveCursor(checkpoints: checkpoints)) return true;
+      dots[1] = dots[2];
+
+      skipCursorStartToChar();
+      moveCursorEnd[Pref.cursorShift.value]!.call();
+
+      if (dots[2] > dots[3]) dots[2] = dots[3];
+      checkpoints.add(dots.toList());
+      if (!valid || !loadedText[dots[1]].isNormal) {
+        debugPrint('Special situation: $dots');
+        checkpoints.add(dots.toList());
+        if (checkpoints.length <= 5000 && dots[3] < loadedTextLength) {
+          if (await moveCursor(checkpoints: checkpoints)) return true;
+        }
       }
-    }
-    for (var checkpoint in checkpoints.reversed) {
-      if (valid) break;
-      dots = checkpoint.toList();
-    }
-    if (!valid) {
-      dots = checkpoints[0];
+      for (var checkpoint in checkpoints.reversed) {
+        if (valid) break;
+        dots = checkpoint.toList();
+      }
+      if (!valid) {
+        dots = checkpoints[0];
+        return false;
+      }
+      await animateDots(checkpoints[0], dots.toList());
+      jumping = false;
+      notify();
+      checkForClearing();
+      return true;
+    } catch (e) {
+      debugPrint('Fatal error on moving cursor: $e');
+      for (var checkpoint in checkpoints.reversed) {
+        if (valid) break;
+        dots = checkpoint.toList();
+      }
       return false;
     }
-    await animateDots(checkpoints[0], dots.toList());
-    jumping = false;
-    notify();
-    checkForClearing();
-    return true;
   }
 
   void skipCursorStartToChar() {

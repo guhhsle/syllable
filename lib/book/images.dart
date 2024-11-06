@@ -11,10 +11,9 @@ extension ImageCache on Book {
 
     final cache = await getApplicationCacheDirectory();
     final cachePath = cache.path + '/' + title;
-    debugPrint(cachePath);
+    print(images);
     for (final image in images) {
       final name = fileName(image.name);
-      debugPrint(name);
       final output = OutputFileStream(cachePath + '/' + name);
       image.writeContent(output);
     }
@@ -57,6 +56,13 @@ extension ImageCache on Book {
 
 String fileName(String unformattedPath) {
   final parts = unformattedPath.split('/');
-  final name = parts.isNotEmpty ? parts.last : '';
+  final name = parts.isNotEmpty ? parts.last : unformattedPath;
+  return name.trim();
+}
+
+String cleanFileName(String unformattedPath) {
+  final fullName = fileName(unformattedPath);
+  final parts = fullName.split('.');
+  final name = parts.isNotEmpty ? parts.first : fullName;
   return name.trim();
 }

@@ -13,8 +13,8 @@ import '../template/functions.dart';
 
 extension Generate on Book {
   Future generate() async {
-    String content = '';
     late final PlatformFile result;
+    fullText = '';
 
     try {
       result = (await FilePicker.platform.pickFiles())!.files.single;
@@ -39,44 +39,53 @@ extension Generate on Book {
       } else if (result.name.endsWith('.epub')) {
 //EPUB
         try {
-          ArchiveFile? spine;
           final inputStream = InputFileStream(result.path!);
           final archive = ZipDecoder().decodeBuffer(inputStream);
-          List<ArchiveFile> htmls = [], images = [];
-          for (final file in archive.files) {
-            if (file.name.endsWith('.opf')) spine = file;
-            if (!file.isFile) continue;
-            if (file.name.endsWith('.html')) htmls.add(file);
-            if (file.name.endsWith('.htm')) htmls.add(file);
-            if (file.name.endsWith('.jpg')) images.add(file);
-            if (file.name.endsWith('.jpeg')) images.add(file);
-          }
-          try {
-            final spineText = utf8.decode(spine!.content);
-            htmls.sort((a, b) {
-              final indexA = spineText.indexOf(a.name);
-              final indexB = spineText.indexOf(b.name);
-              return indexA.compareTo(indexB);
-            });
-          } catch (e) {
-            htmls.sort((a, b) => a.name.compareTo(b.name));
-          }
-          cacheArchivedImages(images);
-          for (final html in htmls) {
+          final files = archive.files.toList();
+          List<String> texts = [], images = [];
+
+          final spines = archive.files.where((f) => f.name.endsWith('.opf'));
+          files.sort((a, b) => a.name.compareTo(b.name));
+          for (final spine in spines) {
             try {
-              final nodes = parse(html.content).body!.nodes;
-              final list = [''];
-              for (final node in nodes) {
-                node.appendTo(list);
-              }
-              for (final nodeContent in list) {
-                content += nodeContent;
-              }
-              content += '\n\n';
+              final text = utf8.decode(spine.content);
+              print(text);
+              files.sort((a, b) {
+                int indexA = text.indexOf(cleanFileName(a.name));
+                int indexB = text.indexOf(cleanFileName(b.name));
+                if (indexA < 0) indexA = 999999999;
+                if (indexB < 0) indexB = 999999999;
+                print(a.name);
+                print(indexA);
+                return indexA.compareTo(indexB);
+              });
+              break;
             } catch (e) {
-              debugPrint('$e');
+              showSnack('$e', false, debug: true);
             }
           }
+          for (final file in files) {
+            try {
+              final nodes = parse(file.content).body!.nodes;
+              for (final node in nodes) {
+                node.appendTo(texts: texts, images: images);
+              }
+            } catch (e) {
+              //NOT IN X/HTML FORMAT
+            }
+          }
+          for (final nodeText in texts) {
+            String addedText = nodeText.trim();
+            if (addedText.length > 0) addedText += '\n\n';
+            fullText += addedText;
+          }
+          final usedImageFiles = files.where((f) {
+            for (final image in images) {
+              if (f.name.contains(image)) return true;
+            }
+            return false;
+          }).toList();
+          cacheArchivedImages(usedImageFiles);
         } catch (e) {
           debugPrint('$e');
         }
@@ -84,11 +93,11 @@ extension Generate on Book {
 //TEXT
         try {
 //APP
-          content = utf8.decode(await File(result.path!).readAsBytes());
+          fullText = utf8.decode(await File(result.path!).readAsBytes());
         } catch (e) {
 //WEB
           try {
-            content = utf8.decode(result.bytes!);
+            fullText = utf8.decode(result.bytes!);
           } catch (e) {
             showSnack('$e', false);
           }
@@ -97,7 +106,7 @@ extension Generate on Book {
     } catch (e) {
       showSnack('$e', false);
     }
-    fullText = content;
+    fullText = fullText.trim();
     rememberNew();
     open();
     showSnack('All done', true);
@@ -105,19 +114,41 @@ extension Generate on Book {
 }
 
 extension AppendNodeContent on Node {
-  void appendTo(List<String> list) {
-    if (attributes['src'] != null) {
-      //print('SLIKAAA');
-      //print(attributes);
-      final imageName = fileName(attributes['src'] ?? '');
-      list.add('[[[$imageName]]]');
-    }
+  void appendTo({
+    required List<String> texts,
+    required List<String> images,
+  }) {
     if (nodes.isEmpty) {
-      list.add(text ?? '');
+      String formatted = parse(text).documentElement!.text;
+      if (formatted.trim().length < 2) formatted = text ?? '';
+      texts.add(formatted);
     } else {
       for (final node in nodes) {
-        node.appendTo(list);
+        node.appendTo(texts: texts, images: images);
+      }
+    }
+    if (attributes['src'] != null) {
+      final imageName = fileName(attributes['src'] ?? '');
+      for (final extension in supported) {
+        if (imageName.endsWith(extension)) {
+          //print('IMAGE: $attributes');
+          texts.add('[[[$imageName]]]');
+          images.add(imageName);
+          return;
+        }
       }
     }
   }
 }
+
+const supported = [
+  'jpg',
+  'jpeg',
+  'png',
+  'gif',
+  'bmp',
+  'webp',
+  'tiff',
+  'tif',
+  'heic',
+];

@@ -27,7 +27,7 @@ enum Pref<T> {
   primaryDark('Dark primary', 'FEDBD0', Icons.colorize_rounded, ui: true),
   debug('Developer', false, Icons.developer_mode_rounded),
   //READING
-  clearAnimation('Clear animation', 60, Icons.animation_rounded),
+  clearAnimation('Clear animation', 45, Icons.animation_rounded),
   cursorAnimation('Cursor animation', 4, Icons.animation_rounded),
   preload('Preload', 2000, Icons.clear_all_rounded),
   breakpoints('Sentence breaks', initBreakpoints, Icons.crop_16_9_rounded),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:syllable/book/clear.dart';
 import 'package:syllable/book/remember.dart';
 import 'animations.dart';
 import 'images.dart';
@@ -16,7 +17,7 @@ class Book with ChangeNotifier {
   String get loadedText => _loadedText;
   void set loadedText(String text) {
     _loadedText = text;
-    loadedTextLength = text.length;
+    loadedTextLength = _loadedText.length;
     scanDisplayedImages();
   }
 
@@ -24,8 +25,8 @@ class Book with ChangeNotifier {
 
   String get fullText => _fullText;
   void set fullText(String text) {
-    length = text.length;
     _fullText = text;
+    length = _fullText.length;
   }
 
   void notify() => notifyListeners();
