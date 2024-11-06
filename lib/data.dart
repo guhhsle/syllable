@@ -28,7 +28,7 @@ enum Pref<T> {
   debug('Developer', false, Icons.developer_mode_rounded),
   //READING
   clearAnimation('Clear animation', 45, Icons.animation_rounded),
-  cursorAnimation('Cursor animation', 4, Icons.animation_rounded),
+  cursorAnimation('Cursor animation', 5, Icons.animation_rounded),
   preload('Preload', 2000, Icons.clear_all_rounded),
   breakpoints('Sentence breaks', initBreakpoints, Icons.crop_16_9_rounded),
   intensity('Intensity', 20, Icons.gesture_rounded),
