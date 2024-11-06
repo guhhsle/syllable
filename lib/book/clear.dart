@@ -1,4 +1,4 @@
-import 'library.dart';
+import 'remember.dart';
 import 'visual.dart';
 import 'book.dart';
 import '../data.dart';
@@ -52,7 +52,7 @@ extension Clear on Book {
       dots[j] -= charOffset;
     }
     position += charOffset;
-    LibraryBook.current.tryToSetPosition(position);
+    rememberPostion();
     charOffset = 0;
     if (loadedTextLength != Pref.preload.value) resetLoadedText();
   }

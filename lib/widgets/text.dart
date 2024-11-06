@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import '../book/visual.dart';
-import '../book/book.dart';
 import '../data.dart';
 
 class BookText extends StatelessWidget {
   const BookText({super.key});
 
-  String get text => Book().loadedText;
-  List<int> get dots => Book().dots;
+  String get text => current.value.loadedText;
+  List<int> get dots => current.value.dots;
 
   @override
   Widget build(BuildContext context) {
@@ -31,31 +30,34 @@ class BookText extends StatelessWidget {
 
     return Stack(
       children: [
-        ListenableBuilder(
-          listenable: Book(),
-          builder: (context, child) => AnimatedPositioned(
-            duration: Duration(milliseconds: Book().animDuration),
-            //easeInOutCubic
-            curve: Curves.ease,
-            top: Book().lineOffsetToVisual,
-            child: Container(
-              padding: const EdgeInsets.only(left: 8, right: 8, top: 10),
-              width: MediaQuery.of(context).size.width,
-              child: RichText(
-                overflow: TextOverflow.fade,
-                textAlign: textAlign,
-                text: TextSpan(
-                  style: font,
-                  children: [
-                    TextSpan(text: text.substring(0, dots[0]), style: non),
-                    TextSpan(
-                        text: text.substring(dots[0], dots[1]), style: semi),
-                    TextSpan(
-                        text: text.substring(dots[1], dots[2]), style: full),
-                    TextSpan(
-                        text: text.substring(dots[2], dots[3]), style: semi),
-                    TextSpan(text: text.substring(dots[3]), style: non),
-                  ],
+        ValueListenableBuilder(
+          valueListenable: current,
+          builder: (context, book, child) => ListenableBuilder(
+            listenable: book,
+            builder: (context, snapshot) => AnimatedPositioned(
+              duration: Duration(milliseconds: book.animDuration),
+              //easeInOutCubic
+              curve: Curves.ease,
+              top: book.lineOffsetToVisual,
+              child: Container(
+                padding: const EdgeInsets.only(left: 8, right: 8, top: 10),
+                width: MediaQuery.of(context).size.width,
+                child: RichText(
+                  overflow: TextOverflow.fade,
+                  textAlign: textAlign,
+                  text: TextSpan(
+                    style: font,
+                    children: [
+                      TextSpan(text: text.substring(0, dots[0]), style: non),
+                      TextSpan(
+                          text: text.substring(dots[0], dots[1]), style: semi),
+                      TextSpan(
+                          text: text.substring(dots[1], dots[2]), style: full),
+                      TextSpan(
+                          text: text.substring(dots[2], dots[3]), style: semi),
+                      TextSpan(text: text.substring(dots[3]), style: non),
+                    ],
+                  ),
                 ),
               ),
             ),

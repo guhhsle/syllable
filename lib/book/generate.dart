@@ -1,19 +1,26 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:archive/archive_io.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:html/dom.dart';
 import 'package:html/parser.dart';
-import 'library.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'remember.dart';
+import 'images.dart';
+import 'book.dart';
 import '../template/functions.dart';
 
-extension Generate on LibraryBook {
+extension Generate on Book {
   Future generate() async {
     String content = '';
     late final PlatformFile result;
 
     try {
       result = (await FilePicker.platform.pickFiles())!.files.single;
+      showSnack('Generating...', true);
+      await Future.delayed(const Duration(milliseconds: 100));
+      title = result.name;
 
       if (result.name.endsWith('.pdf')) {
         showSnack('Convert PDF to text', true);
@@ -35,29 +42,37 @@ extension Generate on LibraryBook {
           ArchiveFile? spine;
           final inputStream = InputFileStream(result.path!);
           final archive = ZipDecoder().decodeBuffer(inputStream);
-          final zips = archive.files.where((file) {
+          List<ArchiveFile> htmls = [], images = [];
+          for (final file in archive.files) {
             if (file.name.endsWith('.opf')) spine = file;
-            if (!file.isFile) return false;
-            if (file.name.endsWith('.html')) return true;
-            if (file.name.endsWith('.htm')) return true;
-            return false;
-          }).toList();
+            if (!file.isFile) continue;
+            if (file.name.endsWith('.html')) htmls.add(file);
+            if (file.name.endsWith('.htm')) htmls.add(file);
+            if (file.name.endsWith('.jpg')) images.add(file);
+            if (file.name.endsWith('.jpeg')) images.add(file);
+          }
           try {
             final spineText = utf8.decode(spine!.content);
-            zips.sort((a, b) {
+            htmls.sort((a, b) {
               final indexA = spineText.indexOf(a.name);
               final indexB = spineText.indexOf(b.name);
               return indexA.compareTo(indexB);
             });
           } catch (e) {
-            zips.sort((a, b) => a.name.compareTo(b.name));
+            htmls.sort((a, b) => a.name.compareTo(b.name));
           }
-          if (spine != null) {}
-          for (var z in zips) {
+          cacheArchivedImages(images);
+          for (final html in htmls) {
             try {
-              content +=
-                  parse(parse(z.content).body!.text).documentElement!.text;
-              content += '\n\n\n';
+              final nodes = parse(html.content).body!.nodes;
+              final list = [''];
+              for (final node in nodes) {
+                node.appendTo(list);
+              }
+              for (final nodeContent in list) {
+                content += nodeContent;
+              }
+              content += '\n\n';
             } catch (e) {
               debugPrint('$e');
             }
@@ -82,9 +97,27 @@ extension Generate on LibraryBook {
     } catch (e) {
       showSnack('$e', false);
     }
-    title = result.name;
-    setContent(content);
-    create();
+    fullText = content;
+    rememberNew();
     open();
+    showSnack('All done', true);
+  }
+}
+
+extension AppendNodeContent on Node {
+  void appendTo(List<String> list) {
+    if (attributes['src'] != null) {
+      //print('SLIKAAA');
+      //print(attributes);
+      final imageName = fileName(attributes['src'] ?? '');
+      list.add('[[[$imageName]]]');
+    }
+    if (nodes.isEmpty) {
+      list.add(text ?? '');
+    } else {
+      for (final node in nodes) {
+        node.appendTo(list);
+      }
+    }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../template/functions.dart';
-import '../book/book.dart';
+import '../book/animations.dart';
 import '../data.dart';
 
 class BookPosition extends StatelessWidget {
@@ -8,28 +8,26 @@ class BookPosition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: Book(),
-      builder: (context, child) {
-        int pos = Book().position;
-        bool addZero = pos / Book().length < 0.1;
-        String percent = '${(pos * 100 / Book().length).toStringAsFixed(2)} %';
-        return InkWell(
+    return ValueListenableBuilder(
+      valueListenable: current,
+      builder: (context, book, child) => ListenableBuilder(
+        listenable: book,
+        builder: (context, child) => InkWell(
           borderRadius: BorderRadius.circular(6),
-          onTap: () async => Book().jumpTo(int.parse(await getInput(
-            pos,
+          onTap: () async => book.jumpTo(int.parse(await getInput(
+            book.position,
             'Jump to position',
           ))),
           child: Text(
-            ' ${addZero ? '0' : ''}$percent ',
-            key: Book().key,
+            book.percentage,
+            key: textKey,
             style: TextStyle(
               fontSize: Pref.fontSize.value.toDouble(),
               fontWeight: FontWeight.values[Pref.fontBold.value ? 8 : 0],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

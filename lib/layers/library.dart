@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../template/functions.dart';
 import '../template/layer.dart';
+import '../book/remember.dart';
 import '../book/generate.dart';
 import '../template/tile.dart';
 import '../book/library.dart';
+import '../book/book.dart';
 import '../data.dart';
 
 class LibraryLayer extends Layer {
@@ -12,7 +14,7 @@ class LibraryLayer extends Layer {
   @override
   construct() {
     action = Tile('Import', Icons.add_rounded, '', () {
-      LibraryBook('New').generate();
+      Book('New').generate();
     });
     trailing = [
       IconButton(
@@ -20,7 +22,7 @@ class LibraryLayer extends Layer {
         onPressed: () => showSnack(
           'Tap to empty library',
           false,
-          onTap: library.empty,
+          onTap: library.forgetAll,
         ),
       ),
     ];
@@ -29,15 +31,15 @@ class LibraryLayer extends Layer {
         book.formatTitle,
         Icons.book_rounded,
         book.title == Pref.book.value ? '***' : '',
-        LibraryBookLayer(book).show,
+        BookLayer(book).show,
       );
     });
   }
 }
 
-class LibraryBookLayer extends Layer {
-  LibraryBook book;
-  LibraryBookLayer(this.book);
+class BookLayer extends Layer {
+  Book book;
+  BookLayer(this.book);
   @override
   construct() {
     action = Tile('Open', Icons.keyboard_return_rounded, '', book.open);
@@ -49,7 +51,7 @@ class LibraryBookLayer extends Layer {
       Tile(book.percentage, Icons.percent_rounded, 'At ${book.position}'),
       Tile('Delete', Icons.delete_forever_rounded, '', () {
         Navigator.of(context).pop();
-        book.delete();
+        book.forget();
       }),
     ];
   }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'animations.dart';
+import 'visual.dart';
 import 'clear.dart';
 import 'book.dart';
 import '../data.dart';

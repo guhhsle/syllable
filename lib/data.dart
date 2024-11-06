@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'settings/interface.dart';
-import 'settings/library.dart';
+import 'layers/interface.dart';
+import 'layers/library.dart';
+import 'layers/cursor.dart';
 import 'template/prefs.dart';
 import 'template/theme.dart';
 import 'template/tile.dart';
-import '../settings/cursor.dart';
+import 'book/book.dart';
 
 const locales = [
   ...['Serbian', 'English', 'Spanish', 'German', 'French', 'Italian'],
@@ -27,7 +28,7 @@ enum Pref<T> {
   debug('Developer', false, Icons.developer_mode_rounded),
   //READING
   clearAnimation('Clear animation', 60, Icons.animation_rounded),
-  cursorAnimation('Cursor animation', 5, Icons.animation_rounded),
+  cursorAnimation('Cursor animation', 4, Icons.animation_rounded),
   preload('Preload', 2000, Icons.clear_all_rounded),
   breakpoints('Sentence breaks', initBreakpoints, Icons.crop_16_9_rounded),
   intensity('Intensity', 20, Icons.gesture_rounded),
@@ -64,6 +65,9 @@ enum Pref<T> {
   @override
   String toString() => name;
 }
+
+final current = ValueNotifier(Book('Hello'));
+final textKey = GlobalKey();
 
 List<Tile> get settings {
   return [
