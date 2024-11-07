@@ -29,6 +29,7 @@ enum Pref<T> {
   //READING
   clearAnimation('Clear animation', 45, Icons.animation_rounded),
   cursorAnimation('Cursor animation', 5, Icons.animation_rounded),
+  cursorOuter('Outer cursor multiplier', 2, Icons.animation_rounded),
   preload('Preload', 2000, Icons.clear_all_rounded),
   breakpoints('Sentence breaks', initBreakpoints, Icons.crop_16_9_rounded),
   intensity('Intensity', 20, Icons.gesture_rounded),

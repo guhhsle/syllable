@@ -17,6 +17,9 @@ class CursorLayer extends Layer {
       Tile.fromPref(Pref.cursorAnimation, suffix: 'ms', onPrefInput: (i) {
         Pref.cursorAnimation.set(int.parse(i).clamp(0, 10000));
       }),
+      Tile.fromPref(Pref.cursorOuter, suffix: 'x', onPrefInput: (i) {
+        Pref.cursorOuter.set(int.parse(i).clamp(0, 10000));
+      }),
       Tile.fromPref(Pref.exponential),
       Tile.fromPref(Pref.cursorShift),
       Tile.fromListPref(Pref.syllables),

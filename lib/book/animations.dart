@@ -21,12 +21,12 @@ extension BookAnimations on Book {
     dots = from.toList();
     if (Pref.cursorAnimation.value > 0) {
       while (true) {
-        if (to[0] > dots[0] && dots[0] < dots[1]) dots[0]++;
-        if (to[0] > dots[0] && dots[0] < dots[1]) dots[0]++;
         if (to[1] > dots[1]) dots[1]++;
         if (to[2] > dots[2]) dots[2]++;
-        if (to[3] > dots[3]) dots[3]++;
-        if (to[3] > dots[3]) dots[3]++;
+        for (int i = 0; i < Pref.cursorOuter.value; i++) {
+          if (to[0] > dots[0] && dots[0] < dots[1]) dots[0]++;
+          if (to[3] > dots[3]) dots[3]++;
+        }
         notify();
         await Future.delayed(Duration(
           milliseconds: Pref.cursorAnimation.value,

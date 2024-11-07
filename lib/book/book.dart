@@ -38,6 +38,7 @@ class Book with ChangeNotifier {
   }
 
   String get formatTitle {
+    //TODO reuse fileFunction
     if (title.contains('.')) return title.split('.').first;
     return title;
   }
