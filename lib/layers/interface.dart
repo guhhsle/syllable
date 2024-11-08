@@ -1,5 +1,6 @@
 import '../template/layer.dart';
 import '../template/tile.dart';
+import '../book/library.dart';
 import '../book/clear.dart';
 import '../data.dart';
 
@@ -18,7 +19,7 @@ class InterfaceLayer extends Layer {
       }),
       Tile.fromPref(Pref.preload, onPrefInput: (i) {
         Pref.preload.set(int.parse(i).clamp(16, 10000));
-        current.value.resetLoadedText();
+        Library().current.resetLoadedText();
       }),
     ];
   }

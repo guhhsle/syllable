@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:syllable/book/clear.dart';
-import 'package:syllable/book/remember.dart';
+import 'package:syllable/functions.dart';
 import 'animations.dart';
+import 'library.dart';
 import 'images.dart';
 import '../data.dart';
 
+const initText = '> Library\n> Import';
+
 class Book with ChangeNotifier {
   String title;
-  int position = 0, length = 0, columns = 0;
+  int position = 0, length = initText.length, columns = 0;
   int lineOffset = 0, charOffset = 0, animDuration = 0;
   var clearing = false, jumping = false, needsClearing = false;
-  var _loadedText = '', loadedTextLength = 0, _fullText = '';
+  var _loadedText = initText, loadedTextLength = 0, _fullText = initText;
   var charHeight = 0.0, dots = [0, 0, 0, 0];
   var displayedImages = <String>[];
 
@@ -37,23 +39,12 @@ class Book with ChangeNotifier {
     return ' ${addZero ? '0' : ''}$percent % ';
   }
 
-  String get formatTitle {
-    //TODO reuse fileFunction
-    if (title.contains('.')) return title.split('.').first;
-    return title;
-  }
+  String get formatTitle => cleanFileName(title);
 
   void open() {
-    current.value = this;
-    try {
-      loadRemembered();
-    } catch (e) {
-      debugPrint('$e');
-      title = 'Hello';
-      fullText = '>Library >Import';
-    }
     Pref.book.set(title);
     jumpTo(position);
+    Library().loadCurrent();
     notify();
   }
 
@@ -65,4 +56,6 @@ class Book with ChangeNotifier {
     }
     return true;
   }
+
+  String get path => '${Library.path}/$title';
 }

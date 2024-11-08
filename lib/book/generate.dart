@@ -7,9 +7,11 @@ import 'package:html/parser.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'remember.dart';
+import 'library.dart';
 import 'images.dart';
 import 'book.dart';
 import '../template/functions.dart';
+import '../functions.dart';
 
 extension Generate on Book {
   Future generate() async {
@@ -107,7 +109,7 @@ extension Generate on Book {
       showSnack('$e', false);
     }
     fullText = fullText.trim();
-    rememberNew();
+    await rememberNew();
     open();
     showSnack('All done', true);
   }

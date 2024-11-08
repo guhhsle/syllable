@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:syllable/book/library.dart';
 import '../template/layer.dart';
 import '../template/tile.dart';
 import '../book/images.dart';
 import '../book/book.dart';
-import '../data.dart';
 
 class ImagesLayer extends Layer {
-  Book get book => current.value;
+  Book get book => Library().current;
   @override
   construct() {
     action = Tile(

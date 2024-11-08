@@ -9,10 +9,9 @@ import '../book/book.dart';
 import '../data.dart';
 
 class LibraryLayer extends Layer {
-  static final library = Library();
-
   @override
   construct() {
+    listenTo(Library());
     action = Tile('Import', Icons.add_rounded, '', () {
       Book('New').generate();
     });
@@ -22,11 +21,11 @@ class LibraryLayer extends Layer {
         onPressed: () => showSnack(
           'Tap to empty library',
           false,
-          onTap: library.forgetAll,
+          onTap: Library().forgetAll,
         ),
       ),
     ];
-    list = library.books.map((book) {
+    list = Library().books.map((book) {
       return Tile.complex(
         book.formatTitle,
         Icons.book_rounded,
@@ -42,6 +41,7 @@ class BookLayer extends Layer {
   BookLayer(this.book);
   @override
   construct() {
+    listenTo(book);
     action = Tile('Open', Icons.keyboard_return_rounded, '', book.open);
     list = [
       Tile(book.title, Icons.edit_rounded, '', () async {

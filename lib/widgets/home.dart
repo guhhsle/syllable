@@ -5,12 +5,16 @@ import 'frame.dart';
 import 'text.dart';
 import '../template/functions.dart';
 import '../template/settings.dart';
+import '../book/library.dart';
 import '../book/cursor.dart';
 import '../book/clear.dart';
+import '../book/book.dart';
 import '../data.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
+
+  Book get current => Library().current;
 
   @override
   Widget build(BuildContext context) {
@@ -26,18 +30,18 @@ class Home extends StatelessWidget {
       ],
       child: GestureDetector(
         onPanEnd: (d) {
-          current.value.needsClearing = true;
-          current.value.checkForClearing();
+          current.needsClearing = true;
+          current.checkForClearing();
         },
         onPanUpdate: (d) async {
-          if (current.value.animating) return;
+          if (current.animating) return;
           if (Pref.exponential.value) {
             distance += d.delta.distanceSquared * Pref.intensity.value;
           } else {
             distance += d.delta.distance * Pref.intensity.value;
           }
           while (distance > 1000) {
-            await current.value.moveCursor();
+            await current.moveCursor();
             distance -= 1000;
           }
         },

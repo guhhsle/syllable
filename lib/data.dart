@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'book/library.dart';
 import 'layers/interface.dart';
 import 'layers/library.dart';
 import 'layers/cursor.dart';
@@ -41,8 +42,7 @@ enum Pref<T> {
   fontAlign('Text align', 'Start', Icons.format_align_justify,
       ui: true, all: aligns),
   book('Book', '', null),
-  books('Books', <String>[], Icons.book_rounded),
-  positions('Positions', <String>[], null),
+  cache(null, '', null),
   ;
 
   final T initial;
@@ -67,7 +67,6 @@ enum Pref<T> {
   String toString() => name;
 }
 
-final current = ValueNotifier(Book('Hello'));
 final textKey = GlobalKey();
 
 List<Tile> get settings {
