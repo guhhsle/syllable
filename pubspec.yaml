@@ -29,7 +29,7 @@ flutter_icons:
   image_path: "assets/icon.png"
   #    flutter pub run flutter_launcher_icons:main
   adaptive_icon_background: "#ffffff"
-  adaptive_icon_foreground: "assets/icon.png"
+  adaptive_icon_foreground: "assets/ic_launcher_foreground.png"
   remove_alpha_ios: true
 
 flutter:
