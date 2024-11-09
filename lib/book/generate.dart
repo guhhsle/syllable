@@ -2,12 +2,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:archive/archive_io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:html/dom.dart';
+import 'package:html/dom.dart' as DOM;
 import 'package:html/parser.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'remember.dart';
-import 'library.dart';
 import 'images.dart';
 import 'book.dart';
 import '../template/functions.dart';
@@ -39,12 +38,11 @@ extension Generate on Book {
 					book = PdfTextExtractor(document).extractText();
 				*/
       } else if (result.name.endsWith('.epub')) {
-//EPUB
         try {
           final inputStream = InputFileStream(result.path!);
           final archive = ZipDecoder().decodeBuffer(inputStream);
           final files = archive.files.toList();
-          List<String> texts = [], images = [];
+          List<String> paragraphs = [''], images = [];
 
           final spines = archive.files.where((f) => f.name.endsWith('.opf'));
           files.sort((a, b) => a.name.compareTo(b.name));
@@ -68,16 +66,14 @@ extension Generate on Book {
           }
           for (final file in files) {
             try {
-              final nodes = parse(file.content).body!.nodes;
-              for (final node in nodes) {
-                node.appendTo(texts: texts, images: images);
-              }
+              final body = parse(file.content).body!;
+              body.appendTo(paragraphs: paragraphs, images: images);
             } catch (e) {
               //NOT IN X/HTML FORMAT
             }
           }
-          for (final nodeText in texts) {
-            String addedText = nodeText.trim();
+          for (final paragraph in paragraphs) {
+            String addedText = paragraph.trim();
             if (addedText.length > 0) addedText += '\n\n';
             fullText += addedText;
           }
@@ -92,12 +88,9 @@ extension Generate on Book {
           debugPrint('$e');
         }
       } else {
-//TEXT
         try {
-//APP
           fullText = utf8.decode(await File(result.path!).readAsBytes());
         } catch (e) {
-//WEB
           try {
             fullText = utf8.decode(result.bytes!);
           } catch (e) {
@@ -115,18 +108,31 @@ extension Generate on Book {
   }
 }
 
-extension AppendNodeContent on Node {
+extension StringPadding on String {
+  bool get isPaddedLeft {
+    int rawLen = length;
+    int trimLen = trimLeft().length;
+    return rawLen > trimLen;
+  }
+}
+
+extension AppendNodeContent on DOM.Node {
   void appendTo({
-    required List<String> texts,
+    required List<String> paragraphs,
     required List<String> images,
   }) {
+    if (isParagraph(this)) paragraphs.add('');
     if (nodes.isEmpty) {
+      String raw = text ?? '';
       String formatted = parse(text).documentElement!.text;
-      if (formatted.trim().length < 2) formatted = text ?? '';
-      texts.add(formatted);
+      if (formatted.trim().length < 2) formatted = raw;
+      if (raw.isPaddedLeft && !formatted.isPaddedLeft) {
+        formatted = ' $formatted';
+      }
+      paragraphs.last += formatted;
     } else {
       for (final node in nodes) {
-        node.appendTo(texts: texts, images: images);
+        node.appendTo(paragraphs: paragraphs, images: images);
       }
     }
     if (attributes['src'] != null) {
@@ -134,16 +140,46 @@ extension AppendNodeContent on Node {
       for (final extension in supported) {
         if (imageName.endsWith(extension)) {
           //print('IMAGE: $attributes');
-          texts.add('[[[$imageName]]]');
+          paragraphs.add('[[[$imageName]]]');
           images.add(imageName);
           return;
         }
       }
     }
   }
+
+  static bool isParagraph(DOM.Node node) {
+    try {
+      final element = node as DOM.Element;
+      return blockElements.contains(element.localName);
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
-const supported = [
+const blockElements = {
+  'p',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'div',
+  'blockquote',
+  'pre',
+  'li',
+  'address',
+  'figcaption',
+  'section',
+  'article',
+  'aside',
+  'footer',
+  'header'
+};
+
+const supported = {
   'jpg',
   'jpeg',
   'png',
@@ -153,4 +189,4 @@ const supported = [
   'tiff',
   'tif',
   'heic',
-];
+};

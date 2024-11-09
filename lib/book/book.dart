@@ -12,7 +12,7 @@ class Book with ChangeNotifier {
   int position = 0, length = initText.length, columns = 0;
   int lineOffset = 0, charOffset = 0, animDuration = 0;
   var clearing = false, jumping = false, needsClearing = false;
-  var _loadedText = initText, loadedTextLength = 0, _fullText = initText;
+  var _loadedText = initText + 'l', loadedTextLength = 0, _fullText = initText;
   var charHeight = 0.0, dots = [0, 0, 0, 0];
   var displayedImages = <String>[];
 

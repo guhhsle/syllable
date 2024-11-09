@@ -31,7 +31,7 @@ class Library with ChangeNotifier {
     try {
       current = findTitle(Pref.book.value)!;
     } catch (e) {
-      debugPrint('No ${Pref.book.title}');
+      debugPrint('Cant find: ${Pref.book.title}');
       current = helloBook;
     }
     notify();
@@ -65,6 +65,13 @@ class Library with ChangeNotifier {
     debugPrint('Added ${book.title}');
     books.add(book);
     return book..addListener(notify);
+  }
+
+  Book? replaceBook(Book newBook) {
+    Book? oldBook = findTitle(newBook.title);
+    if (oldBook != null) removeBook(oldBook);
+    addBook(newBook);
+    return oldBook;
   }
 
   Book? removeBook(Book book) {

@@ -25,7 +25,7 @@ extension Remember on Book {
     await Directory(path).create(recursive: true);
     await rememberPostion();
     await rememberFullText();
-    Library().addBook(this);
+    Library().replaceBook(this);
     await Library().fetchBooks();
   }
 
