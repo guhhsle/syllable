@@ -5,7 +5,7 @@ import '../data.dart';
 
 extension VisualFormatting on String {
   bool get isSyllable => Pref.syllables.value.contains(this);
-  bool get isNormal => !splitsWord && !endsSentence && !isMark;
+  bool get isNormal => !splitsWord && !endsPhrase && !isMark;
   bool get isMark => contains(RegExp(r'["""”“„‟' '‚‛`´»«›‹]'));
   //bool get isErasedOnEndl => contains(RegExp(r'[ \t\n\r]'));
   //Previous RegExp(r'(\s+)|(?=[.,;!?]) -|—'));
@@ -14,8 +14,8 @@ extension VisualFormatting on String {
     return contains(RegExp(r'(\s+)|[-–—_/\\:\n\t\r|•…\[\]{}<>+=' ']'));
   }
 
-  bool get endsSentence {
-    return Pref.breakpoints.value.contains(this) || this == '\n';
+  bool get endsPhrase {
+    return Pref.phraseBreaks.value.contains(this) || this == '\n';
   }
 }
 

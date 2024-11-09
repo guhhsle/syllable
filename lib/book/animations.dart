@@ -23,7 +23,7 @@ extension BookAnimations on Book {
       while (true) {
         if (to[1] > dots[1]) dots[1]++;
         if (to[2] > dots[2]) dots[2]++;
-        for (int i = 0; i < Pref.cursorOuter.value; i++) {
+        for (int i = 0; i < Pref.phraseMultiplier.value; i++) {
           if (to[0] > dots[0] && dots[0] < dots[1]) dots[0]++;
           if (to[3] > dots[3]) dots[3]++;
         }

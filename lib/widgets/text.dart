@@ -15,8 +15,8 @@ class BookText extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final semi = TextStyle(
-      backgroundColor: cs.primary.withOpacity(0.6),
-      color: cs.surface,
+      backgroundColor: cs.primary.withOpacity(Pref.phraseOpacity.value / 100),
+      color: Pref.phraseOpacity.value < 50 ? cs.primary : cs.surface,
     );
     final full = TextStyle(backgroundColor: cs.primary, color: cs.surface);
     final non = TextStyle(color: cs.primary);

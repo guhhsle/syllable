@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'book/library.dart';
+import 'package:syllable/layers/phrase.dart';
 import 'layers/interface.dart';
 import 'layers/library.dart';
-import 'layers/cursor.dart';
 import 'template/prefs.dart';
 import 'template/theme.dart';
 import 'template/tile.dart';
-import 'book/book.dart';
+import 'layers/cursor.dart';
 
 const locales = [
   ...['Serbian', 'English', 'Spanish', 'German', 'French', 'Italian'],
@@ -27,20 +26,28 @@ enum Pref<T> {
   backgroundDark('Dark background', '0F0A0A', Icons.tonality_rounded, ui: true),
   primaryDark('Dark primary', 'FEDBD0', Icons.colorize_rounded, ui: true),
   debug('Developer', false, Icons.developer_mode_rounded),
-  //READING
+  //
+  //INTERFACE
   clearAnimation('Clear animation', 45, Icons.animation_rounded),
-  cursorAnimation('Cursor animation', 5, Icons.animation_rounded),
-  cursorOuter('Outer cursor multiplier', 2, Icons.animation_rounded),
   preload('Preload', 2000, Icons.clear_all_rounded),
-  breakpoints('Sentence breaks', initBreakpoints, Icons.crop_16_9_rounded),
-  intensity('Intensity', 20, Icons.gesture_rounded),
-  exponential('Exponential intensity', false, Icons.stacked_line_chart_rounded),
-  cursorShift('Cursor shift', 'Word', Icons.space_bar_rounded, all: shifts),
-  syllables('Syllables', initSyllables, Icons.crop_16_9_rounded),
   fontSize('Font size', 16, Icons.format_size_rounded, ui: true),
   fontBold('Bold', true, Icons.format_bold_rounded, ui: true),
   fontAlign('Text align', 'Start', Icons.format_align_justify,
       ui: true, all: aligns),
+  //
+  //CURSOR
+  exponential('Exponential intensity', false, Icons.stacked_line_chart_rounded),
+  cursorShift('Cursor shift', 'Word', Icons.space_bar_rounded, all: shifts),
+  syllables('Syllables', initSyllables, Icons.crop_16_9_rounded),
+  cursorAnimation('Cursor animation', 5, Icons.animation_rounded),
+  intensity('Intensity', 20, Icons.gesture_rounded),
+  //
+  //PHRASE
+  phraseMultiplier('Phrase animation', 2, Icons.animation_rounded),
+  phraseBreaks('Phrase breaks', initBreakpoints, Icons.crop_16_9_rounded),
+  phraseOpacity('Phrase opacity', 50, Icons.tonality_rounded, ui: true),
+  //
+  //LIBRARY
   book('Book', '', null),
   cache(null, '', null),
   ;
@@ -71,9 +78,10 @@ final textKey = GlobalKey();
 
 List<Tile> get settings {
   return [
+    Tile('Library', Icons.book_rounded, '', LibraryLayer().show),
     Tile('Interface', Icons.toggle_on, '', InterfaceLayer().show),
     Tile('Cursor', Icons.code_rounded, '', CursorLayer().show),
-    Tile('Library', Icons.book_rounded, '', LibraryLayer().show),
+    Tile('Phrase', Icons.crop_16_9_rounded, '', PhraseLayer().show),
     Tile('Primary', Icons.colorize_rounded, '', ThemeLayer(true).show),
     Tile('Background', Icons.tonality_rounded, '', ThemeLayer(false).show),
   ];

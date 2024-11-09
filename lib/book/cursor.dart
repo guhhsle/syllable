@@ -110,7 +110,7 @@ extension Cursor on Book {
     dots[0] = dots[1] = dots[2] = dots[3];
     dots[3] += 16;
     while (dots[3] + 1 < loadedTextLength) {
-      if (loadedText[dots[3]].endsSentence) break;
+      if (loadedText[dots[3]].endsPhrase) break;
       dots[3]++;
     }
     skipSentenceStartToChar();
