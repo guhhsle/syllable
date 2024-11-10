@@ -12,6 +12,7 @@ class InterfaceLayer extends Layer {
       Tile.fromPref(Pref.fontSize, onPrefInput: (i) {
         Pref.fontSize.set(int.parse(i).clamp(0, 1000));
       }),
+      Tile.fromPref(Pref.font),
       Tile.fromPref(Pref.fontBold),
       Tile.fromPref(Pref.fontAlign),
       Tile.fromPref(Pref.clearAnimation, suffix: 'ms', onPrefInput: (i) {

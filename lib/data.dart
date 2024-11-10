@@ -16,9 +16,14 @@ const initSyllables = ['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U'];
 const initBreakpoints = ['(', ')', '-', '.', ',', '!', '?', ':', ';'];
 const aligns = ['Left', 'Right', 'Center', 'Justify', 'Start', 'End'];
 const shifts = ['Syllable', '2 Syllables', 'Word', '1', '2', '5'];
+const fonts = [
+  ...['JetBrainsMono', 'Departure', 'Haxorville'],
+  ...['OpeningHoursMono', 'RobotoMono', 'YukiCode'],
+];
 
 enum Pref<T> {
-  font('Font', 'JetBrainsMono', Icons.format_italic_rounded, ui: true),
+  font('Font', 'JetBrainsMono', Icons.format_italic_rounded,
+      ui: true, all: fonts),
   locale('Language', 'English', Icons.language_rounded, ui: true, all: locales),
   appbar('Top', 'Black', Icons.gradient_rounded, all: tops, ui: true),
   background('Background', 'F0F8FF', Icons.tonality_rounded, ui: true),

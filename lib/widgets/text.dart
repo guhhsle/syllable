@@ -37,8 +37,7 @@ class BookText extends StatelessWidget {
           listenable: Library(),
           builder: (context, child) => AnimatedPositioned(
             duration: Duration(milliseconds: current.animDuration),
-            //easeInOutCubic
-            curve: Curves.ease,
+            curve: Curves.easeInOutCubic, //ease even
             top: current.lineOffsetToVisual,
             child: Container(
               padding: const EdgeInsets.only(left: 8, right: 8, top: 10),

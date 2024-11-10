@@ -37,7 +37,27 @@ flutter:
   fonts: 
     - family: JetBrainsMono
       fonts:
-        - asset : fonts/JetBrainsMono-Regular.ttf
+        - asset : fonts/JetBrainsMono.ttf
+
+    - family: Departure
+      fonts:
+        - asset : fonts/Departure.otf
+
+    - family: Haxorville
+      fonts:
+        - asset : fonts/Haxorville.ttf
+
+    - family: OpeningHoursMono
+      fonts:
+        - asset : fonts/OpeningHoursMono.ttf
+
+    - family: RobotoMono
+      fonts:
+        - asset : fonts/RobotoMono.ttf
+
+    - family: YukiCode
+      fonts:
+        - asset : fonts/YukiCode.otf
 
   assets:
     - assets/translations/
