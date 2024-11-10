@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:syllable/functions.dart';
 import 'animations.dart';
 import 'library.dart';
 import 'images.dart';
+import 'clear.dart';
+import '../functions.dart';
 import '../data.dart';
 
 const initText = '> Library\n> Import';
@@ -13,7 +14,7 @@ class Book with ChangeNotifier {
   int lineOffset = 0, charOffset = 0, animDuration = 0;
   var clearing = false, jumping = false, needsClearing = false;
   var _loadedText = initText + 'l', loadedTextLength = 0, _fullText = initText;
-  var charHeight = 0.0, dots = [0, 0, 0, 0];
+  var shadowDots = [0, 0, 0, 0], realDots = [0, 0, 0, 0], charHeight = 0.0;
   var displayedImages = <String>[];
 
   String get loadedText => _loadedText;
@@ -23,7 +24,10 @@ class Book with ChangeNotifier {
     scanDisplayedImages();
   }
 
-  Book(this.title);
+  Book(this.title) {
+    addListener(manifestDotsIfNeeded);
+    addListener(clearIfNeeded);
+  }
 
   String get fullText => _fullText;
   void set fullText(String text) {
@@ -48,11 +52,10 @@ class Book with ChangeNotifier {
     notify();
   }
 
-  bool get animating => clearing || jumping;
   bool get valid {
     for (int i = 1; i < 4; i++) {
-      if (dots[i] >= loadedTextLength - 1) return false;
-      if (dots[i] < dots[i - 1]) return false;
+      if (realDots[i] >= loadedTextLength - 1) return false;
+      if (realDots[i] < realDots[i - 1]) return false;
     }
     return true;
   }

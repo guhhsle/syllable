@@ -9,7 +9,7 @@ class BookText extends StatelessWidget {
 
   Book get current => Library().current;
   String get text => current.loadedText;
-  List<int> get dots => current.dots;
+  List<int> get dots => current.shadowDots;
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'animations.dart';
 import 'visual.dart';
-import 'clear.dart';
 import 'book.dart';
 import '../data.dart';
 
@@ -20,72 +18,68 @@ extension Cursor on Book {
   Future<bool> moveCursor({List<List<int>>? checkpoints}) async {
     if (!valid && (checkpoints?.length ?? 6000) > 5000) return false;
     checkpoints ??= [];
-    checkpoints.add(dots.toList());
+    checkpoints.add(realDots.toList());
     try {
-      jumping = true;
-      if (dots[2] >= dots[3]) await nextSentence();
-      checkpoints.add(dots.toList());
-      dots[1] = dots[2];
+      if (realDots[2] >= realDots[3]) await nextSentence();
+      checkpoints.add(realDots.toList());
+      realDots[1] = realDots[2];
 
       skipCursorStartToChar();
       moveCursorEnd[Pref.cursorShift.value]!.call();
 
-      if (dots[2] > dots[3]) dots[2] = dots[3];
-      checkpoints.add(dots.toList());
-      if (!valid || !loadedText[dots[1]].isNormal) {
-        debugPrint('Special situation: $dots');
-        checkpoints.add(dots.toList());
-        if (checkpoints.length <= 5000 && dots[3] < loadedTextLength) {
+      if (realDots[2] > realDots[3]) realDots[2] = realDots[3];
+      checkpoints.add(realDots.toList());
+      if (!valid || !loadedText[realDots[1]].isNormal) {
+        debugPrint('Special situation: $realDots');
+        checkpoints.add(realDots.toList());
+        if (checkpoints.length <= 5000 && realDots[3] < loadedTextLength) {
           if (await moveCursor(checkpoints: checkpoints)) return true;
         }
       }
       for (var checkpoint in checkpoints.reversed) {
         if (valid) break;
-        dots = checkpoint.toList();
+        realDots = checkpoint.toList();
       }
       if (!valid) {
-        dots = checkpoints[0];
+        realDots = checkpoints[0];
         return false;
       }
-      await animateDots(checkpoints[0], dots.toList());
-      jumping = false;
       notify();
-      checkForClearing();
       return true;
     } catch (e) {
       debugPrint('Fatal error on moving cursor: $e');
       for (var checkpoint in checkpoints.reversed) {
         if (valid) break;
-        dots = checkpoint.toList();
+        realDots = checkpoint.toList();
       }
       return false;
     }
   }
 
   void skipCursorStartToChar() {
-    while (!loadedText[dots[1]].isNormal) {
-      if (dots[1] >= dots[2] - 1) {
-        if (dots[2] >= dots[3]) break;
-        dots[2]++;
+    while (!loadedText[realDots[1]].isNormal) {
+      if (realDots[1] >= realDots[2] - 1) {
+        if (realDots[2] >= realDots[3]) break;
+        realDots[2]++;
       }
-      dots[1]++;
+      realDots[1]++;
     }
   }
 
   void skipSentenceStartToChar() {
-    while (!loadedText[dots[0]].isNormal) {
-      if (dots[0] >= dots[3]) break;
-      dots[0]++;
+    while (!loadedText[realDots[0]].isNormal) {
+      if (realDots[0] >= realDots[3]) break;
+      realDots[0]++;
     }
-    dots[2] = dots[1] = dots[0];
+    realDots[2] = realDots[1] = realDots[0];
   }
 
   void moveCursorEndBySyllable() {
-    dots[2] += 2;
-    while (!loadedText[dots[2]].isSyllable) {
-      if (!loadedText[dots[2]].isNormal) break;
-      if (dots[2] > dots[3]) break;
-      dots[2]++;
+    realDots[2] += 2;
+    while (!loadedText[realDots[2]].isSyllable) {
+      if (!loadedText[realDots[2]].isNormal) break;
+      if (realDots[2] > realDots[3]) break;
+      realDots[2]++;
     }
   }
 
@@ -95,23 +89,23 @@ extension Cursor on Book {
   }
 
   void moveCursorEndByWord() {
-    dots[2] += 2;
-    while (loadedText[dots[2]].isNormal) {
-      if (dots[2] > dots[3]) break;
-      dots[2]++;
+    realDots[2] += 2;
+    while (loadedText[realDots[2]].isNormal) {
+      if (realDots[2] > realDots[3]) break;
+      realDots[2]++;
     }
   }
 
-  void moveCursorEndBy1() => dots[2] += 1;
-  void moveCursorEndBy2() => dots[2] += 2;
-  void moveCursorEndBy5() => dots[2] += 5;
+  void moveCursorEndBy1() => realDots[2] += 1;
+  void moveCursorEndBy2() => realDots[2] += 2;
+  void moveCursorEndBy5() => realDots[2] += 5;
 
   Future nextSentence() async {
-    dots[0] = dots[1] = dots[2] = dots[3];
-    dots[3] += 16;
-    while (dots[3] + 1 < loadedTextLength) {
-      if (loadedText[dots[3]].endsPhrase) break;
-      dots[3]++;
+    realDots[0] = realDots[1] = realDots[2] = realDots[3];
+    realDots[3] += 16;
+    while (realDots[3] + 1 < loadedTextLength) {
+      if (loadedText[realDots[3]].endsPhrase) break;
+      realDots[3]++;
     }
     skipSentenceStartToChar();
   }

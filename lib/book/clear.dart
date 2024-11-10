@@ -4,33 +4,24 @@ import 'book.dart';
 import '../data.dart';
 
 extension Clear on Book {
-  void clearRow() {
+  clearRow() {
     int i = 0;
     while (i < columns && loadedText[charOffset + i] != '\n') {
       i++;
-      if (charOffset + i >= loadedTextLength) {
-        needsClearing = false;
-        return;
-      }
+      if (charOffset + i >= loadedTextLength) return needsClearing = false;
     }
     while (i > 0 && !loadedText[charOffset + i].splitsWord) {
       i--;
     }
     i++;
-    if (charOffset + i > dots[0]) {
-      needsClearing = false;
-      return;
-    }
+    if (charOffset + i > shadowDots[0]) return needsClearing = false;
     lineOffset++;
     charOffset += i;
   }
 
-  void checkForClearing() {
-    if (needsClearing && !animating) clearRows();
-  }
-
-  Future<void> clearRows() async {
-    needsClearing = clearing = true;
+  Future<void> clearIfNeeded() async {
+    if (!needsClearing || clearing) return;
+    clearing = true;
     loadVisualInfo();
     while (needsClearing) {
       clearRow();
@@ -48,8 +39,9 @@ extension Clear on Book {
     loadedText = loadedText.substring(charOffset);
     lineOffset = 0;
     animDuration = 0;
-    for (int j = 0; j < dots.length; j++) {
-      dots[j] -= charOffset;
+    for (int j = 0; j < 4; j++) {
+      realDots[j] -= charOffset;
+      shadowDots[j] -= charOffset;
     }
     position += charOffset;
     rememberPostion();

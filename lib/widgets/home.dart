@@ -31,10 +31,9 @@ class Home extends StatelessWidget {
       child: GestureDetector(
         onPanEnd: (d) {
           current.needsClearing = true;
-          current.checkForClearing();
+          current.clearIfNeeded();
         },
         onPanUpdate: (d) async {
-          if (current.animating) return;
           if (Pref.exponential.value) {
             distance += d.delta.distanceSquared * Pref.intensity.value;
           } else {

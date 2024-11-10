@@ -11,34 +11,40 @@ extension BookAnimations on Book {
     if (end > length) end = length;
     loadedText = fullText.substring(i, end);
     rememberPostion();
-    dots = [0, 0, 0, 0];
+    realDots = [0, 0, 0, 0];
+    shadowDots = [0, 0, 0, 0];
     await moveCursor();
-    dots[0] = dots[1] = 0;
+    realDots[0] = realDots[1] = 0;
+    shadowDots[0] = shadowDots[1] = 0;
     notify();
   }
 
-  Future animateDots(List<int> from, List<int> to) async {
-    dots = from.toList();
-    if (Pref.cursorAnimation.value > 0) {
+  Future<void> manifestDotsIfNeeded() async {
+    if (jumping) return;
+    jumping = true;
+    if (Pref.cursorDelay.value > 0) {
       while (true) {
-        if (to[1] > dots[1]) dots[1]++;
-        if (to[2] > dots[2]) dots[2]++;
+        if (realDots[1] > shadowDots[1]) shadowDots[1]++;
+        if (realDots[2] > shadowDots[2]) shadowDots[2]++;
         for (int i = 0; i < Pref.phraseMultiplier.value; i++) {
-          if (to[0] > dots[0] && dots[0] < dots[1]) dots[0]++;
-          if (to[3] > dots[3]) dots[3]++;
+          if (realDots[0] > shadowDots[0]) {
+            if (shadowDots[0] < shadowDots[1]) shadowDots[0]++;
+          }
+          if (realDots[3] > shadowDots[3]) shadowDots[3]++;
         }
         notify();
         await Future.delayed(Duration(
-          milliseconds: Pref.cursorAnimation.value,
+          milliseconds: Pref.cursorDelay.value,
         ));
-        if (to[0] > dots[0]) continue;
-        if (to[1] > dots[1]) continue;
-        if (to[2] > dots[2]) continue;
-        if (to[3] > dots[3]) continue;
+        if (realDots[0] > shadowDots[0]) continue;
+        if (realDots[1] > shadowDots[1]) continue;
+        if (realDots[2] > shadowDots[2]) continue;
+        if (realDots[3] > shadowDots[3]) continue;
         break;
       }
     } else {
-      dots = to.toList();
+      shadowDots = realDots.toList();
     }
+    jumping = false;
   }
 }
