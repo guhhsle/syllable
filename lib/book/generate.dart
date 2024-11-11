@@ -41,16 +41,22 @@ extension Generate on Book {
         try {
           final inputStream = InputFileStream(result.path!);
           final archive = ZipDecoder().decodeBuffer(inputStream);
-          final files = archive.files.toList();
           List<String> paragraphs = [''], images = [];
 
+          final xmls = archive.files.where((file) {
+            for (final extension in textExtensions) {
+              if (file.name.endsWith(extension)) return true;
+            }
+            return false;
+          }).toList();
+
           final spines = archive.files.where((f) => f.name.endsWith('.opf'));
-          files.sort((a, b) => a.name.compareTo(b.name));
+          xmls.sort((a, b) => a.name.compareTo(b.name));
           for (final spine in spines) {
             try {
               final text = utf8.decode(spine.content);
               print(text);
-              files.sort((a, b) {
+              xmls.sort((a, b) {
                 int indexA = text.indexOf(cleanFileName(a.name));
                 int indexB = text.indexOf(cleanFileName(b.name));
                 if (indexA < 0) indexA = 999999999;
@@ -64,12 +70,12 @@ extension Generate on Book {
               showSnack('$e', false, debug: true);
             }
           }
-          for (final file in files) {
+          for (final xml in xmls) {
             try {
-              final body = parse(file.content).body!;
+              final body = parse(xml.content).body!;
               body.appendTo(paragraphs: paragraphs, images: images);
             } catch (e) {
-              //NOT IN X/HTML FORMAT
+              //NOT IN SUPPORTED FORMAT
             }
           }
           for (final paragraph in paragraphs) {
@@ -77,7 +83,7 @@ extension Generate on Book {
             if (addedText.length > 0) addedText += '\n\n';
             fullText += addedText;
           }
-          final usedImageFiles = files.where((f) {
+          final usedImageFiles = archive.files.where((f) {
             for (final image in images) {
               if (f.name.contains(image)) return true;
             }
@@ -137,10 +143,10 @@ extension AppendNodeContent on DOM.Node {
     }
     if (attributes['src'] != null) {
       final imageName = fileName(attributes['src'] ?? '');
-      for (final extension in supported) {
+      for (final extension in imageExtensions) {
         if (imageName.endsWith(extension)) {
-          //print('IMAGE: $attributes');
           paragraphs.add('[[[$imageName]]]');
+          paragraphs.add('');
           images.add(imageName);
           return;
         }
@@ -159,34 +165,20 @@ extension AppendNodeContent on DOM.Node {
 }
 
 const blockElements = {
-  'p',
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'div',
-  'blockquote',
-  'pre',
-  'li',
-  'address',
-  'figcaption',
-  'section',
-  'article',
-  'aside',
-  'footer',
-  'header'
+  ...{'p', 'h1', 'h2', 'h3', 'h4', 'h5'},
+  ...{'h6', 'div', 'blockquote', 'pre', 'li'},
+  ...{'address', 'figcaption', 'section'},
+  ...{'aside', 'footer', 'header', 'article'}
 };
 
-const supported = {
-  'jpg',
-  'jpeg',
-  'png',
-  'gif',
-  'bmp',
-  'webp',
-  'tiff',
-  'tif',
-  'heic',
+const imageExtensions = {
+  ...{'jpg', 'jpeg', 'png', 'gif', 'bmp'},
+  ...{'webp', 'tiff', 'tif', 'heic'}
+};
+
+const textExtensions = {
+  'htm', 'ml', //TEXT
+  'ncx', //STRUCTURE AND CHAPTERS
+  'opf', //STRUCTURE AND DESCRIPTIONS
+  'plist' //iBooks
 };
