@@ -1,4 +1,4 @@
-# syllable
+# Digesture
 
 Cursor that highlights current part of the word and part of the sentence. Cursor moves by gestures!!!
 
