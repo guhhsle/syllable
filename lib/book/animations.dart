@@ -16,6 +16,7 @@ extension BookAnimations on Book {
     await moveCursor();
     realDots[0] = realDots[1] = 0;
     shadowDots[0] = shadowDots[1] = 0;
+    cursorDot = realDots[1];
     notify();
   }
 

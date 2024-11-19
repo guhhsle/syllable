@@ -42,10 +42,11 @@ enum Pref<T> {
   //
   //CURSOR
   exponential('Exponential intensity', false, Icons.stacked_line_chart_rounded),
-  cursorShift('Cursor shift', 'Word', Icons.space_bar_rounded, all: shifts),
+  cursorShift('Shift', 'Word', Icons.space_bar_rounded, all: shifts),
   syllables('Syllables', initSyllables, Icons.crop_16_9_rounded),
-  cursorDelay('Cursor delay', 5, Icons.animation_rounded),
+  cursorDelay('Delay', 5, Icons.animation_rounded),
   intensity('Intensity', 20, Icons.gesture_rounded),
+  normalised('Normalise by length', false, Icons.straighten_rounded),
   //
   //PHRASE
   phraseMultiplier('Phrase animation', 2, Icons.animation_rounded),

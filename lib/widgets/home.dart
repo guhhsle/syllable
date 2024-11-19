@@ -40,7 +40,7 @@ class Home extends StatelessWidget {
             distance += d.delta.distance * Pref.intensity.value;
           }
           while (distance > 1000) {
-            await current.moveCursor();
+            await current.incrementCursorDot();
             distance -= 1000;
           }
         },

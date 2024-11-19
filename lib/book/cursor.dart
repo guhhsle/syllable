@@ -15,6 +15,13 @@ extension Cursor on Book {
     };
   }
 
+  Future<bool> incrementCursorDot() async {
+    cursorDot = cursorDot.clamp(realDots[1], realDots[2]) + 1;
+    if (cursorDot >= realDots[2]) return moveCursor();
+    if (!Pref.normalised.value) return moveCursor();
+    return false;
+  }
+
   Future<bool> moveCursor({List<List<int>>? checkpoints}) async {
     if (!valid && (checkpoints?.length ?? 6000) > 5000) return false;
     checkpoints ??= [];

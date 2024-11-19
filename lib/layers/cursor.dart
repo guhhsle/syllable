@@ -18,6 +18,7 @@ class CursorLayer extends Layer {
         Pref.cursorDelay.set(int.parse(i).clamp(1, 10000));
       }),
       Tile.fromPref(Pref.exponential),
+      Tile.fromPref(Pref.normalised),
       Tile.fromPref(Pref.cursorShift),
       Tile.fromListPref(Pref.syllables),
     ];
