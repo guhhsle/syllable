@@ -37,7 +37,7 @@ enum Pref<T> {
   preload('Preload', 2000, Icons.clear_all_rounded),
   fontSize('Font size', 16, Icons.format_size_rounded, ui: true),
   fontBold('Bold', true, Icons.format_bold_rounded, ui: true),
-  fontAlign('Text align', 'Start', Icons.format_align_justify,
+  fontAlign('Text align', 'Center', Icons.format_align_justify,
       ui: true, all: aligns),
   //
   //CURSOR

@@ -53,6 +53,7 @@ extension Remember on Book {
   Future<void> load() async {
     try {
       await Future.wait([loadMeta(), loadText()]);
+      notify();
     } catch (e) {
       debugPrint('Cant load $title: $e');
     }

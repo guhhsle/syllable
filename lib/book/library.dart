@@ -44,7 +44,9 @@ class Library with ChangeNotifier {
         if (!(item is Directory)) continue;
         final title = fileName(item.path);
         freshTitles.add(title);
-        await addBook(Book(title)).load();
+        final book = Book(title);
+        addBook(book);
+        book.load();
       }
     } catch (e) {
       debugPrint('Cant load library: $e');
