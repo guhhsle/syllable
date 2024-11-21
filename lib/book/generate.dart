@@ -179,6 +179,6 @@ const imageExtensions = {
 const textExtensions = {
   'htm', 'ml', //TEXT
   'ncx', //STRUCTURE AND CHAPTERS
-  'opf', //STRUCTURE AND DESCRIPTIONS
+  //'opf', //STRUCTURE AND DESCRIPTIONS
   'plist' //iBooks
 };

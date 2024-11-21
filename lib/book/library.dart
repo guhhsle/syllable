@@ -39,6 +39,7 @@ class Library with ChangeNotifier {
 
   Future<void> fetchBooks() async {
     List<String> freshTitles = [];
+    List<Future> loadFutures = [];
     try {
       for (final item in directory.listSync()) {
         if (!(item is Directory)) continue;
@@ -46,11 +47,12 @@ class Library with ChangeNotifier {
         freshTitles.add(title);
         final book = Book(title);
         addBook(book);
-        book.load();
+        loadFutures.add(book.load());
       }
     } catch (e) {
       debugPrint('Cant load library: $e');
     }
+    await Future.wait(loadFutures);
     for (int i = 0; i < books.length; i++) {
       if (!freshTitles.contains(books[i].title)) {
         removeBook(books[i]);
